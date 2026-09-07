@@ -10,10 +10,13 @@ export type QuizChoice = {
   rationale: string
 }
 
+export type Difficulty = 'easy' | 'medium' | 'hard'
+
 export type QuizQuestion = {
   id: string
   stem: string
   type: 'single' | 'sata'
+  difficulty: Difficulty
   choices: QuizChoice[]
   outsider?: boolean
   ngnNote?: string

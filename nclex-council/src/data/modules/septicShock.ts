@@ -42,6 +42,7 @@ export const septicShock: Module = {
     {
       id: 'sepsis-1',
       type: 'single',
+      difficulty: 'medium',
       stem: 'A patient in septic shock has received 30 mL/kg of crystalloid over the past hour. MAP remains 58 mmHg. Lung sounds are clear, IVC is collapsible on bedside ultrasound. What is the priority next action?',
       choices: [
         { id: 'a', text: 'Administer an additional 30 mL/kg fluid bolus', correct: false, rationale: 'Tempting because "still hypotensive" reads as "needs more volume" — but that\'s only correct if the patient shows signs of being fluid-responsive, which the clear lungs/collapsible IVC do suggest here. Still, guidelines move to vasopressors once the initial resuscitation bolus fails to restore MAP, run concurrently with ongoing reassessment rather than open-ended re-bolusing.' },
@@ -54,6 +55,7 @@ export const septicShock: Module = {
     {
       id: 'sepsis-2',
       type: 'single',
+      difficulty: 'hard',
       outsider: true,
       stem: 'A nursing student reasons: "This patient is in shock, so I should push fluids until the blood pressure normalizes." What is the flaw in applying this reasoning universally to septic shock?',
       choices: [
@@ -66,6 +68,7 @@ export const septicShock: Module = {
     {
       id: 'sepsis-3',
       type: 'sata',
+      difficulty: 'easy',
       stem: 'Which actions fall within the Surviving Sepsis Campaign Hour-1 bundle? Select all that apply.',
       choices: [
         { id: 'a', text: 'Obtain blood cultures before starting antibiotics', correct: true, rationale: 'Correct — cultures should be drawn prior to (or without significantly delaying) antibiotic administration.' },

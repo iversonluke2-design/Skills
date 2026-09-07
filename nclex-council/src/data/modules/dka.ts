@@ -43,6 +43,7 @@ export const dka: Module = {
     {
       id: 'dka-1',
       type: 'single',
+      difficulty: 'hard',
       stem: 'A patient arrives in DKA: glucose 620 mg/dL, pH 7.18, potassium 3.0 mEq/L. The provider\'s order set includes an insulin infusion. What is the priority action?',
       choices: [
         {
@@ -74,6 +75,7 @@ export const dka: Module = {
     {
       id: 'dka-2',
       type: 'single',
+      difficulty: 'hard',
       outsider: true,
       stem: "You're taught that DKA resolution means 'the glucose came down.' A patient's glucose has normalized to 180 mg/dL, so the resident wants to stop the insulin infusion. What's the flaw in that plan?",
       choices: [
@@ -107,6 +109,7 @@ export const dka: Module = {
     {
       id: 'dka-3',
       type: 'sata',
+      difficulty: 'easy',
       stem: 'Which findings would the nurse expect to assess in a patient presenting with DKA? Select all that apply.',
       choices: [
         { id: 'a', text: 'Kussmaul respirations', correct: true, rationale: 'Correct — deep, rapid respirations compensating for metabolic acidosis by blowing off CO2.' },

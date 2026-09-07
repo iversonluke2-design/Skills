@@ -44,6 +44,7 @@ export const icp: Module = {
     {
       id: 'icp-1',
       type: 'single',
+      difficulty: 'hard',
       outsider: true,
       stem: "A nursing student states: 'I'll know a patient has rising ICP because they'll develop the classic Cushing's triad — I'll watch vitals closely for that.' What is the problem with this plan as an early-detection strategy?",
       choices: [
@@ -57,6 +58,7 @@ export const icp: Module = {
     {
       id: 'icp-2',
       type: 'single',
+      difficulty: 'medium',
       stem: 'A patient with a traumatic brain injury has an ICP of 22 mmHg and MAP of 75 mmHg. What is this patient\'s cerebral perfusion pressure (CPP), and is it adequate?',
       choices: [
         { id: 'a', text: 'CPP = 53 mmHg; this is below the typical target range and represents inadequate cerebral perfusion', correct: true, rationale: 'CPP = MAP − ICP = 75 − 22 = 53 mmHg, below the general 60–70 mmHg target — this patient needs intervention to either lower ICP or support MAP.' },
@@ -68,6 +70,7 @@ export const icp: Module = {
     {
       id: 'icp-3',
       type: 'sata',
+      difficulty: 'easy',
       stem: 'Which nursing interventions are appropriate for a patient with increased ICP? Select all that apply.',
       choices: [
         { id: 'a', text: 'Maintain head of bed at 30 degrees with head in neutral, midline position', correct: true, rationale: 'Correct — promotes venous drainage from the brain.' },

@@ -43,6 +43,7 @@ export const ards: Module = {
     {
       id: 'ards-1',
       type: 'single',
+      difficulty: 'medium',
       stem: 'A patient with ARDS on mechanical ventilation has an SpO2 of 84% on FiO2 100%. What action is most appropriate?',
       choices: [
         { id: 'a', text: 'There is nothing more to titrate — FiO2 is already maximized', correct: false, rationale: 'This treats FiO2 as the only lever, which is exactly the trap. It isn\'t.' },
@@ -54,6 +55,7 @@ export const ards: Module = {
     {
       id: 'ards-2',
       type: 'single',
+      difficulty: 'hard',
       outsider: true,
       stem: "A student says: 'If the patient is hypoxic, just turn the oxygen up until the sat improves — that always works.' What assumption does this statement get wrong specifically in ARDS?",
       choices: [
@@ -67,6 +69,7 @@ export const ards: Module = {
     {
       id: 'ards-3',
       type: 'sata',
+      difficulty: 'easy',
       stem: 'Which interventions are consistent with lung-protective ventilation strategy in ARDS? Select all that apply.',
       choices: [
         { id: 'a', text: 'Setting tidal volume at 4–6 mL/kg predicted body weight', correct: true, rationale: 'Correct — the core ARDSnet strategy.' },

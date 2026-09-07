@@ -1,17 +1,53 @@
 @import "tailwindcss";
 
 @theme {
+  /* Brand palette */
   --color-bg: #0b0f14;
   --color-panel: #12181f;
   --color-panel-2: #1a222c;
   --color-border: #263241;
   --color-text: #dbe4ee;
   --color-text-dim: #8ea0b3;
-  --color-accent: #22d3ee;
   --color-accent-2: #34d399;
   --color-warn: #fbbf24;
   --color-danger: #f87171;
   --color-outsider: #c084fc;
+
+  /* shadcn/ui semantic tokens, mapped onto the palette above */
+  --color-background: #0b0f14;
+  --color-foreground: #dbe4ee;
+  --color-card: #12181f;
+  --color-card-foreground: #dbe4ee;
+  --color-popover: #151c24;
+  --color-popover-foreground: #dbe4ee;
+  --color-primary: #22d3ee;
+  --color-primary-foreground: #04121a;
+  --color-secondary: #1a222c;
+  --color-secondary-foreground: #dbe4ee;
+  --color-muted: #1a222c;
+  --color-muted-foreground: #8ea0b3;
+  --color-accent: #17313a;
+  --color-accent-foreground: #dbe4ee;
+  --color-destructive: #f87171;
+  --color-destructive-foreground: #290b0b;
+  --color-border: #263241;
+  --color-input: #263241;
+  --color-ring: #22d3ee;
+
+  --color-sidebar: #0e141b;
+  --color-sidebar-foreground: #dbe4ee;
+  --color-sidebar-primary: #22d3ee;
+  --color-sidebar-primary-foreground: #04121a;
+  --color-sidebar-accent: #17202a;
+  --color-sidebar-accent-foreground: #dbe4ee;
+  --color-sidebar-border: #263241;
+  --color-sidebar-ring: #22d3ee;
+
+  --radius: 0.75rem;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
 html {
@@ -31,6 +67,6 @@ body {
 }
 
 ::selection {
-  background: var(--color-accent);
+  background: var(--color-primary);
   color: #04121a;
 }

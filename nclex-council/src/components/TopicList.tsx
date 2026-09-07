@@ -1,5 +1,7 @@
 import type { Module } from '../data/types'
 import type { ModuleProgress } from '../lib/progress'
+import { Badge } from './ui/badge'
+import { Card, CardContent, CardHeader } from './ui/card'
 
 type Props = {
   modules: Module[]
@@ -9,46 +11,52 @@ type Props = {
 
 export function TopicList({ modules, progress, onSelect }: Props) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      {modules.map((m) => {
-        const p = progress[m.id]
-        const pct = p && p.bestTotal > 0 ? Math.round((p.bestScore / p.bestTotal) * 100) : null
-        return (
-          <button
-            key={m.id}
-            onClick={() => onSelect(m.id)}
-            className="text-left rounded-xl border border-border bg-panel p-5 hover:border-accent/60 hover:bg-panel-2 transition-colors focus:outline-none focus:ring-2 focus:ring-accent/50"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-xs uppercase tracking-wide text-accent font-semibold">{m.system}</p>
-                <h3 className="text-lg font-semibold text-text mt-1">{m.title}</h3>
-              </div>
-              {pct !== null && (
-                <span
-                  className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${
-                    pct >= 80
-                      ? 'bg-accent-2/15 text-accent-2'
-                      : pct >= 50
-                        ? 'bg-warn/15 text-warn'
-                        : 'bg-danger/15 text-danger'
-                  }`}
-                >
-                  {pct}%
-                </span>
-              )}
-            </div>
-            <p className="text-sm text-text-dim mt-3 leading-relaxed">{m.hook}</p>
-            {p ? (
-              <p className="text-xs text-text-dim mt-3">
-                {p.attempts} quiz attempt{p.attempts === 1 ? '' : 's'} · last {p.lastScore}/{p.lastTotal}
-              </p>
-            ) : (
-              <p className="text-xs text-text-dim mt-3">Not studied yet</p>
-            )}
-          </button>
-        )
-      })}
+    <div className="mx-auto max-w-4xl">
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold text-foreground">Welcome back.</h1>
+        <p className="mt-1 text-muted-foreground">Pick a topic to study, or jump into a quiz.</p>
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        {modules.map((m) => {
+          const p = progress[m.id]
+          const pct = p && p.bestTotal > 0 ? Math.round((p.bestScore / p.bestTotal) * 100) : null
+          return (
+            <Card
+              key={m.id}
+              onClick={() => onSelect(m.id)}
+              className="cursor-pointer border-border bg-card transition-colors hover:border-primary/60 hover:bg-secondary/60"
+            >
+              <CardHeader>
+                <div className="flex items-start justify-between gap-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-primary">{m.system}</p>
+                  {pct !== null && (
+                    <Badge
+                      variant="outline"
+                      className={
+                        pct >= 80
+                          ? 'border-accent-2/40 text-accent-2'
+                          : pct >= 50
+                            ? 'border-warn/40 text-warn'
+                            : 'border-danger/40 text-danger'
+                      }
+                    >
+                      {pct}%
+                    </Badge>
+                  )}
+                </div>
+                <h3 className="text-lg font-semibold text-foreground">{m.title}</h3>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm leading-relaxed text-muted-foreground">{m.hook}</p>
+                <p className="mt-3 text-xs text-muted-foreground">
+                  {p ? `${p.attempts} quiz attempt${p.attempts === 1 ? '' : 's'} · last ${p.lastScore}/${p.lastTotal}` : 'Not studied yet'}
+                </p>
+              </CardContent>
+            </Card>
+          )
+        })}
+      </div>
     </div>
   )
 }

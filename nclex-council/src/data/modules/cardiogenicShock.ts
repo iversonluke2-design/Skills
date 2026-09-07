@@ -43,6 +43,7 @@ export const cardiogenicShock: Module = {
     {
       id: 'cardiogenic-1',
       type: 'single',
+      difficulty: 'medium',
       stem: 'A patient post-MI presents with BP 82/58, HR 118, crackles bilaterally, JVD, cool clammy skin, and urine output of 15 mL/hr. Which order should the nurse question?',
       choices: [
         { id: 'a', text: 'Start dobutamine infusion', correct: false, rationale: 'Appropriate — an inotrope to improve contractility fits this pump-failure picture.' },
@@ -54,6 +55,7 @@ export const cardiogenicShock: Module = {
     {
       id: 'cardiogenic-2',
       type: 'single',
+      difficulty: 'hard',
       outsider: true,
       stem: "A student reasons: 'The patient's blood pressure is low and they're in shock, so more IV fluid should help, since that's what we do for shock.' Where does this reasoning break down in cardiogenic shock specifically?",
       choices: [
@@ -66,6 +68,7 @@ export const cardiogenicShock: Module = {
     {
       id: 'cardiogenic-3',
       type: 'sata',
+      difficulty: 'easy',
       stem: 'Which hemodynamic findings are expected in cardiogenic shock? Select all that apply.',
       choices: [
         { id: 'a', text: 'Decreased cardiac output/cardiac index', correct: true, rationale: 'Correct — the defining pump-failure feature.' },
