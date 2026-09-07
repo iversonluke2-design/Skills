@@ -1,4 +1,8 @@
 import type { Module } from '../data/types'
+import { ContentBlockView } from './ContentBlockView'
+import { RecallCheck } from './RecallCheck'
+import { RichText } from './RichText'
+import { TeachBack } from './TeachBack'
 import { Button } from './ui/button'
 
 type Props = {
@@ -21,12 +25,10 @@ export function ModuleStudy({ module: m, onStartQuiz, onBack }: Props) {
       <div className="mt-8 space-y-6">
         {m.pathoChain.map((section, i) => (
           <div key={i} className="rounded-xl border border-border bg-card p-5">
-            <h2 className="font-semibold text-foreground mb-2">{section.heading}</h2>
+            <h2 className="font-semibold text-foreground mb-3">{section.heading}</h2>
             <div className="space-y-3">
-              {section.body.map((p, j) => (
-                <p key={j} className="text-sm text-muted-foreground leading-relaxed">
-                  {p}
-                </p>
+              {section.blocks.map((block, j) => (
+                <ContentBlockView key={j} block={block} glossary={m.glossary} />
               ))}
             </div>
           </div>
@@ -38,7 +40,7 @@ export function ModuleStudy({ module: m, onStartQuiz, onBack }: Props) {
         <ul className="space-y-2 list-disc list-inside">
           {m.icuPearls.map((pearl, i) => (
             <li key={i} className="text-sm text-muted-foreground leading-relaxed">
-              {pearl}
+              <RichText text={pearl} glossary={m.glossary} />
             </li>
           ))}
         </ul>
@@ -46,7 +48,17 @@ export function ModuleStudy({ module: m, onStartQuiz, onBack }: Props) {
 
       <div className="mt-6 rounded-xl border border-outsider/40 bg-outsider/10 p-5">
         <h2 className="font-semibold text-outsider mb-2">Don't miss this</h2>
-        <p className="text-sm text-foreground leading-relaxed">{m.outsiderFlag}</p>
+        <p className="text-sm text-foreground leading-relaxed">
+          <RichText text={m.outsiderFlag} glossary={m.glossary} />
+        </p>
+      </div>
+
+      <div className="mt-6">
+        <RecallCheck items={m.recallChecks} />
+      </div>
+
+      <div className="mt-6">
+        <TeachBack teachBack={m.teachBack} />
       </div>
 
       <div className="mt-6 rounded-lg border border-border bg-card/50 p-4">

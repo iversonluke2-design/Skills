@@ -3,10 +3,13 @@
 A study app for ICU-focused NCLEX-NGN prep, laid out like Claude's UI: a
 collapsible sidebar (topics + study tools) alongside a main content pane.
 
-Each topic walks through a patho chain, ICU-level depth and complications, a
-callout for the assumption students usually miss, an NGN-style quiz with trap
-distractors, and a closing "cannot miss" takeaway. Progress (attempts, best
-score) is tracked per topic in the browser via `localStorage`.
+Each topic walks through a patho chain built from color-coded content blocks
+(paragraph, NCLEX trap, bedside pearl, "how it's tested", mnemonic/anchor),
+ICU-level depth and complications, a callout for the assumption students
+usually miss, click-to-reveal glossary terms, a click-to-reveal recall check,
+a teach-back prompt, an NGN-style quiz with trap distractors, and a closing
+"cannot miss" takeaway. Progress (attempts, best score) is tracked per topic
+in the browser via `localStorage`.
 
 **New quiz** (sidebar) builds a custom question set from any combination of
 topics and difficulty (easy/medium/hard), in either style:
@@ -36,7 +39,10 @@ npm run preview   # serve the production build locally
 ## Adding a new topic
 
 Add a file in `src/data/modules/` following the `Module` shape in
-`src/data/types.ts`, then register it in `src/data/modules/index.ts`.
+`src/data/types.ts`, then register it in `src/data/modules/index.ts`. Each
+`pathoChain` section is a list of `blocks` (`p` / `trap` / `bedside` /
+`howtested` / `anchor`); a module's `glossary` terms are auto-linked
+anywhere they appear in block or pearl text (no manual markup needed).
 
 ## Content notice
 

@@ -8,23 +8,57 @@ export const cardiogenicShock: Module = {
   pathoChain: [
     {
       heading: 'The pump fails, not the tank or the pipes',
-      body: [
-        "Contrast this with hypovolemic shock (tank is empty) and septic shock (pipes are leaky and dilated). Cardiogenic shock starts with the pump itself failing — most commonly a large MI (especially involving significant left ventricular mass), but also severe myocarditis, acute valve failure, or end-stage cardiomyopathy.",
-        "The heart can no longer generate adequate cardiac output. Volume status can be completely normal — the problem is purely the pump's ability to move that volume forward.",
+      blocks: [
+        {
+          type: 'p',
+          text: 'Contrast this with hypovolemic shock (tank is empty) and septic shock (pipes are leaky and dilated). Cardiogenic shock starts with the pump itself failing — most commonly a large MI (especially involving significant left ventricular mass), but also severe myocarditis, acute valve failure, or end-stage cardiomyopathy.',
+        },
+        {
+          type: 'p',
+          text: "The heart can no longer generate adequate cardiac output. Volume status can be completely normal — the problem is purely the pump's ability to move that volume forward.",
+        },
+        {
+          type: 'bedside',
+          text: "Cool, clammy skin and a falling urine output in a post-MI patient — even with a blood pressure that hasn't crashed yet — is your bedside cue that forward flow is already failing. Don't wait for hypotension to call it.",
+        },
       ],
     },
     {
       heading: 'The body compensates by squeezing down — and it backfires',
-      body: [
-        "Low cardiac output triggers the sympathetic nervous system and renin-angiotensin-aldosterone system, causing widespread vasoconstriction (high systemic vascular resistance) to try to maintain blood pressure. This is the opposite hemodynamic direction from septic shock's vasodilation.",
-        "But vasoconstriction increases afterload — the resistance the already-failing pump has to push against. This makes the failing heart work even harder against a tighter system, worsening the pump failure it was trying to compensate for. It's a vicious cycle.",
+      blocks: [
+        {
+          type: 'p',
+          text: "Low cardiac output triggers the sympathetic nervous system and renin-angiotensin-aldosterone system, causing widespread vasoconstriction (high systemic vascular resistance) to try to maintain blood pressure. This is the opposite hemodynamic direction from septic shock's vasodilation.",
+        },
+        {
+          type: 'p',
+          text: "But vasoconstriction increases afterload — the resistance the already-failing pump has to push against. This makes the failing heart work even harder against a tighter system, worsening the pump failure it was trying to compensate for. It's a vicious cycle.",
+        },
+        {
+          type: 'howtested',
+          text: 'NCLEX will hand you a hemodynamic panel (CO, SVR, PCWP) and expect you to match the pattern to the shock type: cardiogenic shock is low CO, high SVR, high PCWP — memorize the direction of each number, not just that they\'re "abnormal."',
+        },
       ],
     },
     {
       heading: 'Backward failure floods the lungs',
-      body: [
-        "With the left ventricle unable to eject effectively, pressure backs up into the left atrium and then the pulmonary circulation. Pulmonary capillary pressure rises, and fluid gets pushed out of the pulmonary vasculature into the alveoli — cardiogenic pulmonary edema.",
-        "This is why the classic cardiogenic shock patient presents with signs of both poor forward perfusion (hypotension, cool/clammy skin, altered mentation, decreased urine output) AND backward congestion (crackles, JVD, orthopnea, frothy sputum) simultaneously.",
+      blocks: [
+        {
+          type: 'p',
+          text: 'With the left ventricle unable to eject effectively, pressure backs up into the left atrium and then the pulmonary circulation. Pulmonary capillary wedge pressure rises, and fluid gets pushed out of the pulmonary vasculature into the alveoli — cardiogenic pulmonary edema.',
+        },
+        {
+          type: 'p',
+          text: 'This is why the classic cardiogenic shock patient presents with signs of both poor forward perfusion (hypotension, cool/clammy skin, altered mentation, decreased urine output) AND backward congestion (crackles, JVD, orthopnea, frothy sputum) simultaneously.',
+        },
+        {
+          type: 'trap',
+          text: "Crackles, JVD, and hypotension read as 'shock, so bolus fluids' to a nurse running on reflex. Here that bolus has nowhere useful to go — the pulmonary circulation is already backed up, and more volume floods it further.",
+        },
+        {
+          type: 'anchor',
+          text: 'Anchor the fingerprint: pump failed, squeezed down, backed up — low CO, high SVR, high PCWP.',
+        },
       ],
     },
   ],
@@ -39,6 +73,39 @@ export const cardiogenicShock: Module = {
   ],
   outsiderFlag:
     "The 'shock = give fluids' reflex is taught early and reinforced constantly with hypovolemic and septic shock scenarios, so it generalizes — incorrectly — to cardiogenic shock. The hidden assumption: that all shock states are volume-responsive. Cardiogenic shock is the direct counterexample. A patient in cardiogenic shock with crackles, JVD, and hypoxia getting an NCLEX-tempting 'administer IV fluid bolus' order is a scenario built specifically to catch students running on reflex instead of reading the hemodynamic picture in front of them.",
+  glossary: [
+    { term: 'cardiac output', definition: 'The volume of blood the heart pumps per minute (heart rate × stroke volume) — the number that drops first and drives the entire cardiogenic shock picture.' },
+    { term: 'systemic vascular resistance', definition: "The resistance the heart pumps against — HIGH in cardiogenic shock (compensatory vasoconstriction), the opposite direction from septic shock's vasodilation." },
+    { term: 'afterload', definition: 'The resistance the left ventricle must overcome to eject blood — compensatory vasoconstriction raises afterload, which paradoxically makes a failing pump work even harder.' },
+    { term: 'pulmonary capillary wedge pressure', definition: "An estimate of left atrial (and left ventricular filling) pressure — HIGH in cardiogenic shock, reflecting blood backing up behind a failing left ventricle." },
+  ],
+  recallChecks: [
+    {
+      question: "What's the hemodynamic fingerprint of cardiogenic shock (CO, SVR, PCWP)?",
+      answer: 'Low cardiac output, high SVR, high PCWP — the opposite SVR direction from septic shock.',
+    },
+    {
+      question: 'Why does compensatory vasoconstriction make cardiogenic shock worse?',
+      answer: 'It increases afterload, forcing the already-failing pump to work even harder against a tighter system — a vicious cycle.',
+    },
+    {
+      question: 'What is the definitive treatment for cardiogenic shock caused by an acute MI?',
+      answer: 'Emergent revascularization (PCI or CABG) — no amount of pressor or inotrope support fixes an occluded coronary artery.',
+    },
+    {
+      question: "Why are inotropes often preferred over pure vasopressors in cardiogenic shock when the patient isn't profoundly hypotensive?",
+      answer: 'Inotropes (dobutamine, milrinone) improve contractility and forward flow without the same afterload penalty as pure vasoconstrictors.',
+    },
+  ],
+  teachBack: {
+    prompt: 'Explain to a classmate why a patient in cardiogenic shock with crackles and JVD should NOT automatically get an IV fluid bolus, even though they are hypotensive.',
+    points: [
+      'The problem is pump failure, not volume depletion — PCWP is already high, meaning the pulmonary circulation is already congested.',
+      "Extra fluid volume the failing left ventricle can't move forward backs up further into the lungs, worsening pulmonary edema.",
+      'The fix is inotropes (contractility), afterload reduction, or mechanical support (IABP/Impella) — not more preload.',
+      'A strong explanation also names the exception: right-sided MI with preload-dependent physiology, where fluid actually can help.',
+    ],
+  },
   quiz: [
     {
       id: 'cardiogenic-1',

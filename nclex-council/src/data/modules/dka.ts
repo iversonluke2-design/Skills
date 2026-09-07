@@ -8,23 +8,57 @@ export const dka: Module = {
   pathoChain: [
     {
       heading: 'The starting problem: no insulin, hormones going rogue',
-      body: [
-        "Start at the cell. No insulin (or way too little, like a sick Type 1 who skipped doses, or huge stress hormone surge in Type 1/2 during illness) means glucose can't get into cells. The cell thinks it's starving, even though the blood is drowning in sugar.",
-        "The body panics and dumps counter-regulatory hormones — glucagon, cortisol, catecholamines, growth hormone. Those hormones tell the liver to make even more glucose (gluconeogenesis, glycogenolysis) and tell fat cells to start breaking down fat for fuel (lipolysis). That's the whole disaster in one sentence: cells starving in a sea of sugar, so the body makes it worse trying to feed them.",
+      blocks: [
+        {
+          type: 'p',
+          text: "Start at the cell. No insulin (or way too little, like a sick Type 1 who skipped doses, or huge stress hormone surge in Type 1/2 during illness) means glucose can't get into cells. The cell thinks it's starving, even though the blood is drowning in sugar.",
+        },
+        {
+          type: 'p',
+          text: "The body panics and dumps counter-regulatory hormones — glucagon, cortisol, catecholamines, growth hormone. Those hormones tell the liver to make even more glucose (gluconeogenesis, glycogenolysis) and tell fat cells to start breaking down fat for fuel (lipolysis). That's the whole disaster in one sentence: cells starving in a sea of sugar, so the body makes it worse trying to feed them.",
+        },
+        {
+          type: 'bedside',
+          text: "A patient who's tachypneic, breathing deep and fast, and smells faintly like nail polish remover before you've even gotten a glucose back — that's your bedside clue to think DKA before the labs confirm it.",
+        },
       ],
     },
     {
       heading: 'Fat breakdown → ketones → acid',
-      body: [
-        "Free fatty acids flood the liver. The liver converts them to ketone bodies (acetoacetate, beta-hydroxybutyrate, acetone) as an emergency fuel source. Ketones are acids. Pour enough acid into the blood and you get a wide anion-gap metabolic acidosis — that's the 'A' in DKA.",
-        "The body tries to buffer: respiratory compensation shows up as Kussmaul breathing (deep, rapid, blowing off CO2 to fight the acidosis) and that fruity/acetone breath smell is the ketones being exhaled.",
+      blocks: [
+        {
+          type: 'p',
+          text: "Free fatty acids flood the liver. The liver converts them to ketone bodies (acetoacetate, beta-hydroxybutyrate, acetone) as an emergency fuel source. Ketones are acids. Pour enough acid into the blood and you get a wide anion gap metabolic acidosis — that's the 'A' in DKA.",
+        },
+        {
+          type: 'p',
+          text: 'The body tries to buffer: respiratory compensation shows up as Kussmaul breathing (deep, rapid, blowing off CO2 to fight the acidosis) and that fruity/acetone breath smell is the ketones being exhaled.',
+        },
+        {
+          type: 'howtested',
+          text: "NCLEX loves pairing Kussmaul breathing with an ABG showing low pH and low HCO3, then asking you to name what the lungs are compensating for. If you see deep, rapid respirations plus a metabolic acidosis on the ABG, that's respiratory compensation for metabolic acidosis — not a primary respiratory problem.",
+        },
       ],
     },
     {
       heading: 'Osmotic diuresis wrecks fluid and electrolytes',
-      body: [
-        "Meanwhile the glucose itself is a problem. Once blood glucose blows past the renal threshold (~180 mg/dL), the kidneys can't reabsorb it all, so glucose spills into urine and drags water with it — osmotic diuresis. That's massive fluid loss: patients can lose 6–10 liters.",
-        "Potassium gets dragged out in that diuresis too, plus the acidosis is shoving K+ out of cells into the blood in exchange for H+ (cells buffering the acid by trading potassium for hydrogen). So the serum potassium on the lab slip can look normal or even high, while the patient's total-body potassium is actually depleted. That mismatch is the single most dangerous thing in this whole chain — because the number lies.",
+      blocks: [
+        {
+          type: 'p',
+          text: 'Meanwhile the glucose itself is a problem. Once blood glucose blows past the renal threshold (~180 mg/dL), the kidneys can\'t reabsorb it all, so glucose spills into urine and drags water with it — osmotic diuresis. That\'s massive fluid loss: patients can lose 6–10 liters.',
+        },
+        {
+          type: 'p',
+          text: "Potassium gets dragged out in that diuresis too, plus the acidosis is shoving K+ out of cells into the blood in exchange for H+ (cells buffering the acid by trading potassium for hydrogen). So the serum potassium on the lab slip can look normal or even high, while the patient's total-body potassium is actually depleted. That mismatch is the single most dangerous thing in this whole chain — because the number lies.",
+        },
+        {
+          type: 'trap',
+          text: "A student sees an initial potassium of 5.2 (high-normal) and assumes replacement isn't needed at all. That's the trap: that number reflects acidosis pushing K+ out of cells, not a true surplus — it's about to crash once insulin starts driving K+ back in.",
+        },
+        {
+          type: 'anchor',
+          text: "Anchor it: Fluids, then Lytes, then Insulin — F-L-I, in that order, every single time.",
+        },
       ],
     },
   ],
@@ -39,6 +73,41 @@ export const dka: Module = {
   ],
   outsiderFlag:
     "Students are trained to see 'DKA = give insulin' as a reflex. The hidden assumption is that the glucose number is the emergency. It isn't — the acid-base and electrolyte picture is the emergency, and the glucose is just the flashy number sitting on top of it. Miss the potassium check because you're fixated on the sugar, and insulin becomes the thing that kills the patient, not the thing that saves them.",
+  glossary: [
+    { term: 'ketone bodies', definition: 'Acetoacetate, beta-hydroxybutyrate, and acetone — acidic byproducts the liver makes from fatty acids when it has no insulin-driven glucose uptake to rely on. They are the acid load behind the metabolic acidosis in DKA.' },
+    { term: 'osmotic diuresis', definition: 'Fluid loss driven by unreabsorbed solute (here, glucose) pulling water into the urine along with it — the mechanism behind the massive volume loss in DKA.' },
+    { term: 'Kussmaul breathing', definition: "Deep, rapid respirations that blow off CO2 to compensate for a metabolic acidosis — a respiratory response to a metabolic problem, not a primary lung issue." },
+    { term: 'counter-regulatory hormones', definition: 'Glucagon, cortisol, catecholamines, and growth hormone — hormones that oppose insulin\'s effects by raising blood glucose and promoting fat breakdown, surging during illness or insulin deficiency.' },
+    { term: 'anion gap', definition: 'Na+ minus (Cl- + HCO3-); a wide gap signals unmeasured acids (like ketones) are present, and tracking it shows whether the underlying acidosis is actually resolving.' },
+    { term: 'gluconeogenesis', definition: "The liver's synthesis of new glucose from non-carbohydrate sources — one of the ways counter-regulatory hormones make hyperglycemia worse in DKA." },
+  ],
+  recallChecks: [
+    {
+      question: 'Why does serum potassium look normal or even high in DKA even though total-body potassium is depleted?',
+      answer: "Acidosis drives K+ out of cells in exchange for H+ (a buffering mechanism), and osmotic diuresis is wasting potassium in the urine — the serum draw catches K+ mid-shift, not the true total-body store, which is running low.",
+    },
+    {
+      question: 'What blood glucose level typically triggers glucosuria and osmotic diuresis?',
+      answer: "Roughly 180 mg/dL — the renal threshold above which the kidneys can't reabsorb all the filtered glucose.",
+    },
+    {
+      question: 'Once glucose hits ~200–250 mg/dL, why add dextrose to the IV fluids instead of just stopping the insulin drip?',
+      answer: 'The insulin infusion is still needed to shut off ketogenesis and close the anion gap — adding dextrose lets the drip keep running safely without dropping glucose too low.',
+    },
+    {
+      question: "What's the feared neuro complication of DKA treatment, and who's most at risk?",
+      answer: 'Cerebral edema — overwhelmingly in pediatric and young Type 1 patients, typically appearing 4–12 hours into treatment.',
+    },
+  ],
+  teachBack: {
+    prompt: 'Explain to a classmate why giving insulin too early in DKA can be dangerous, even though the patient is drowning in glucose and acid.',
+    points: [
+      'Insulin drives potassium from the blood back into cells — if serum K+ is already under 3.3, that shift can trigger a lethal arrhythmia before insulin ever fixes the acidosis.',
+      "The acidosis and glucose are downstream of the real problem (no insulin plus a counter-regulatory hormone surge) — correcting the numbers fast isn't the same as correcting the sequence safely.",
+      'Correct order: isotonic fluids first, then confirm/correct potassium, then start the insulin infusion — not insulin first.',
+      "A strong explanation names the specific risk (hypokalemia-driven arrhythmia), not just a vague 'insulin can be risky.'",
+    ],
+  },
   quiz: [
     {
       id: 'dka-1',

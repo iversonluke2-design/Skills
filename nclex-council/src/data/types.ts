@@ -1,6 +1,28 @@
+export type ContentBlock =
+  | { type: 'p'; text: string }
+  | { type: 'trap'; text: string }
+  | { type: 'bedside'; text: string }
+  | { type: 'howtested'; text: string }
+  | { type: 'anchor'; text: string }
+
 export type PathoSection = {
   heading: string
-  body: string[]
+  blocks: ContentBlock[]
+}
+
+export type GlossaryTerm = {
+  term: string
+  definition: string
+}
+
+export type RecallCheckItem = {
+  question: string
+  answer: string
+}
+
+export type TeachBack = {
+  prompt: string
+  points: string[]
 }
 
 export type QuizChoice = {
@@ -30,6 +52,9 @@ export type Module = {
   pathoChain: PathoSection[]
   icuPearls: string[]
   outsiderFlag: string
+  glossary: GlossaryTerm[]
+  recallChecks: RecallCheckItem[]
+  teachBack: TeachBack
   quiz: QuizQuestion[]
   chairman: {
     cannotMiss: string

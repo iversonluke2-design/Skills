@@ -8,23 +8,57 @@ export const septicShock: Module = {
   pathoChain: [
     {
       heading: 'Infection triggers an inflammatory wildfire',
-      body: [
-        "It starts with an infection (usually gram-negative bacteria, but any source) triggering a massive systemic inflammatory response — cytokines like TNF-alpha and IL-1/IL-6 flood the bloodstream. This isn't localized anymore; the whole vascular system is reacting.",
-        "Those inflammatory mediators cause widespread vasodilation (nitric oxide-driven) and increased capillary permeability. Picture every blood vessel in the body relaxing and getting leaky at the same time.",
+      blocks: [
+        {
+          type: 'p',
+          text: "It starts with an infection (usually gram-negative bacteria, but any source) triggering a massive systemic inflammatory response — cytokines like TNF-alpha and IL-1/IL-6 flood the bloodstream. This isn't localized anymore; the whole vascular system is reacting.",
+        },
+        {
+          type: 'p',
+          text: 'Those inflammatory mediators cause widespread vasodilation (nitric oxide-driven) and increased capillary permeability. Picture every blood vessel in the body relaxing and getting leaky at the same time.',
+        },
+        {
+          type: 'bedside',
+          text: "A patient who's suddenly confused, tachypneic, and warm/flushed with bounding pulses — not cold and clammy — is showing you early distributive shock. Warm skin in a hypotensive patient is not reassuring here.",
+        },
       ],
     },
     {
       heading: 'Distributive shock: the tank is fine, the plumbing failed',
-      body: [
-        "This is what makes septic shock a distributive shock, fundamentally different from hypovolemic shock. The blood volume hasn't necessarily dropped — it's been redistributed into a vascular space that's now way too big (vasodilation) and leaking fluid into the tissues (capillary leak → third-spacing → edema).",
-        "Effective circulating volume crashes even though total body fluid might be normal or even high. Blood pressure drops because the container (vasculature) is now way bigger than the volume inside it.",
+      blocks: [
+        {
+          type: 'p',
+          text: 'This is what makes septic shock a distributive shock, fundamentally different from hypovolemic shock. The blood volume hasn\'t necessarily dropped — it\'s been redistributed into a vascular space that\'s now way too big (vasodilation) and leaking fluid into the tissues (capillary leak → third-spacing → edema).',
+        },
+        {
+          type: 'p',
+          text: 'Effective circulating volume crashes even though total body fluid might be normal or even high. Blood pressure drops because the container (vasculature) is now way bigger than the volume inside it.',
+        },
+        {
+          type: 'trap',
+          text: "Warm extremities and bounding pulses can read as 'not that sick' to an inexperienced eye, especially next to a textbook picture of cold, clammy hypovolemic shock. In early septic shock, warm and hypotensive is often sicker, not better.",
+        },
       ],
     },
     {
       heading: 'Hypoperfusion → anaerobic metabolism → lactate',
-      body: [
-        "With vessels dilated and leaky, tissues stop getting adequately perfused. Cells shift to anaerobic metabolism, producing lactate. Lactate isn't just a lab value to chart — it's a direct marker of how badly tissue is being starved of oxygen, and trending it tells you if your interventions are working.",
-        "Left uncorrected: multi-organ dysfunction — acute kidney injury, ARDS, DIC, hepatic dysfunction, altered mentation — because every organ is running on an oxygen deficit.",
+      blocks: [
+        {
+          type: 'p',
+          text: "With vessels dilated and leaky, tissues stop getting adequately perfused. Cells shift to anaerobic metabolism, producing lactate. Lactate isn't just a lab value to chart — it's a direct marker of how badly tissue is being starved of oxygen, and trending it tells you if your interventions are working.",
+        },
+        {
+          type: 'p',
+          text: 'Left uncorrected: multi-organ dysfunction — acute kidney injury, ARDS, DIC, hepatic dysfunction, altered mentation — because every organ is running on an oxygen deficit.',
+        },
+        {
+          type: 'howtested',
+          text: "NCLEX will show you a lactate that's falling (say, 6.0 → 3.5 → 2.0) after fluids/antibiotics/pressors and expect you to recognize that as evidence perfusion is improving — not just a number to report without interpreting the trend.",
+        },
+        {
+          type: 'anchor',
+          text: "Anchor the Hour-1 bundle: Lactate, Cultures, Antibiotics, Fluids, Pressors — L-C-A-F-P, cultures always before antibiotics.",
+        },
       ],
     },
   ],
@@ -38,6 +72,39 @@ export const septicShock: Module = {
   ],
   outsiderFlag:
     "Every nursing student is trained hard on 'shock = fluids' from the hypovolemic-shock lecture, and that reflex carries over uncritically. The hidden assumption: that fluid resuscitation is unlimited and always beneficial. It isn't. Because septic shock causes capillary leak, aggressive or unmonitored fluid boluses push fluid straight into the interstitium and lungs — over-resuscitation is a well-documented driver of ARDS and worse outcomes in sepsis. The instinct to 'just give more fluid' when the pressure doesn't respond is exactly the moment you should be reassessing volume status and reaching for a vasopressor instead.",
+  glossary: [
+    { term: 'cytokines', definition: 'Signaling proteins (like TNF-alpha, IL-1, IL-6) released during the immune response to infection — the drivers of the systemic vasodilation and capillary leak seen in septic shock.' },
+    { term: 'capillary leak', definition: 'Increased permeability of capillary walls that lets fluid escape the vasculature into the interstitium — the reason septic shock patients can be fluid-overloaded in the tissues while still intravascularly depleted.' },
+    { term: 'distributive shock', definition: 'A shock category where blood volume is often normal but redistributed out of effective circulation by vasodilation and capillary leak — fundamentally different physiology from hypovolemic shock.' },
+    { term: 'anaerobic metabolism', definition: "Energy production without adequate oxygen, producing lactate as a byproduct — what cells switch to when perfusion can't meet oxygen demand." },
+  ],
+  recallChecks: [
+    {
+      question: "Why is septic shock called 'distributive' rather than hypovolemic?",
+      answer: 'Total body fluid may be normal or even high — the problem is that vasodilation and capillary leak redistribute effective circulating volume out of the vascular space, not that fluid is missing overall.',
+    },
+    {
+      question: 'What MAP target guides vasopressor titration in septic shock?',
+      answer: 'At least 65 mmHg.',
+    },
+    {
+      question: 'Which vasopressor is first-line in septic shock, and what is typically added second?',
+      answer: 'Norepinephrine is first-line; vasopressin is typically added second to help reduce the norepinephrine dose.',
+    },
+    {
+      question: 'Why does trending lactate matter more than one isolated lactate value?',
+      answer: 'A falling trend shows your interventions — fluids, source control, pressors — are actually improving tissue oxygenation, not just that one draw looked abnormal.',
+    },
+  ],
+  teachBack: {
+    prompt: "Explain to a classmate why 'give more fluid' isn't automatically the right answer once a septic shock patient has already received their initial 30 mL/kg bolus.",
+    points: [
+      'Septic shock causes capillary leak — fluid beyond what the leaky vasculature can hold escapes into the lungs and tissues instead of improving perfusion.',
+      'Guidelines move to vasopressors (norepinephrine) once MAP stays under 65 mmHg after the initial bolus, rather than repeating boluses indefinitely.',
+      'Reassess with dynamic measures (passive leg raise, IVC collapsibility) instead of assuming persistent hypotension automatically means more volume is needed.',
+      "A strong explanation distinguishes distributive shock's capillary-leak physiology from hypovolemic shock's simple volume-deficit physiology.",
+    ],
+  },
   quiz: [
     {
       id: 'sepsis-1',

@@ -8,23 +8,57 @@ export const icp: Module = {
   pathoChain: [
     {
       heading: 'The skull is a locked box: Monro-Kellie doctrine',
-      body: [
-        "Start with the container. The skull is a rigid, fixed-volume box holding three things: brain tissue (~80%), blood (~10%), and CSF (~10%). Total volume is fixed — it cannot expand.",
-        "The Monro-Kellie doctrine says if one component increases (a tumor, a bleed, cerebral edema), the others must compensate by decreasing — CSF gets displaced into the spinal canal, venous blood gets pushed out — or ICP starts to rise. This compensation has a limit.",
+      blocks: [
+        {
+          type: 'p',
+          text: 'Start with the container. The skull is a rigid, fixed-volume box holding three things: brain tissue (~80%), blood (~10%), and CSF (~10%). Total volume is fixed — it cannot expand.',
+        },
+        {
+          type: 'p',
+          text: 'The Monro-Kellie doctrine says if one component increases (a tumor, a bleed, cerebral edema), the others must compensate by decreasing — CSF gets displaced into the spinal canal, venous blood gets pushed out — or ICP starts to rise. This compensation has a limit.',
+        },
+        {
+          type: 'bedside',
+          text: "At the bedside, the earliest tell is subtle: a patient who's suddenly a little more restless, a little slower to answer, or 'just not acting like themselves.' That's worth a call before it becomes anything more dramatic.",
+        },
       ],
     },
     {
       heading: 'Compensation fails, ICP climbs, perfusion drops',
-      body: [
-        "Once compensatory mechanisms are exhausted, even small volume increases cause dramatic ICP spikes — the pressure-volume curve goes from flat to a cliff. This is why a patient can look stable and then decompensate rapidly.",
-        "Cerebral Perfusion Pressure (CPP) = MAP − ICP. As ICP rises, CPP falls even if blood pressure stays normal, meaning the brain is being perfused less and less even though the rest of the body's hemodynamics look fine on paper.",
+      blocks: [
+        {
+          type: 'p',
+          text: 'Once compensatory mechanisms are exhausted, even small volume increases cause dramatic ICP spikes — the pressure-volume curve goes from flat to a cliff. This is why a patient can look stable and then decompensate rapidly.',
+        },
+        {
+          type: 'p',
+          text: "Cerebral Perfusion Pressure (CPP) = MAP − ICP. As ICP rises, CPP falls even if blood pressure stays normal, meaning the brain is being perfused less and less even though the rest of the body's hemodynamics look fine on paper.",
+        },
+        {
+          type: 'howtested',
+          text: 'NCLEX math questions love handing you an ICP and a MAP and asking you to calculate CPP — remember it\'s subtraction (MAP − ICP), not addition, and that the normal target range is roughly 60–70 mmHg.',
+        },
       ],
     },
     {
       heading: 'Herniation: the point of no return',
-      body: [
-        "If ICP keeps rising, brain tissue gets forced from a higher-pressure compartment into a lower-pressure one — herniation, physically displacing brain structures, including the brainstem, which controls breathing and cardiovascular regulation.",
-        "Cushing's triad — widening pulse pressure with hypertension, bradycardia, and irregular respirations — reflects the brainstem being compressed and the body's last-ditch reflex (Cushing's reflex) trying to push arterial pressure above the rising ICP to preserve some cerebral perfusion. This is a pre-terminal sign of impending herniation, not an early one.",
+      blocks: [
+        {
+          type: 'p',
+          text: 'If ICP keeps rising, brain tissue gets forced from a higher-pressure compartment into a lower-pressure one — herniation, physically displacing brain structures, including the brainstem, which controls breathing and cardiovascular regulation.',
+        },
+        {
+          type: 'p',
+          text: "Cushing's triad — widening pulse pressure with hypertension, bradycardia, and irregular respirations — reflects the brainstem being compressed and the body's last-ditch reflex (Cushing's reflex) trying to push arterial pressure above the rising ICP to preserve some cerebral perfusion. This is a pre-terminal sign of impending herniation, not an early one.",
+        },
+        {
+          type: 'trap',
+          text: "Waiting for a 'fixed and dilated' pupil as your confirmation is the same trap one step later — pupil changes from oculomotor nerve compression show up after LOC changes too, not before them.",
+        },
+        {
+          type: 'anchor',
+          text: "Anchor Cushing's triad as H-B-I: Hypertension (widened pulse pressure), Bradycardia, Irregular respirations — and remember it's the LAST thing to show up, not the first.",
+        },
       ],
     },
   ],
@@ -40,6 +74,40 @@ export const icp: Module = {
   ],
   outsiderFlag:
     "The near-universal student assumption is that Cushing's triad is what you watch for to 'catch' rising ICP early. That assumption is backwards, and it's exactly the kind of thing that gets missed because it sounds like textbook knowledge. Cushing's triad is a LATE, ominous finding reflecting brainstem compression — by the time it appears, herniation may already be underway. The actual earliest indicator of increased ICP is a change in level of consciousness (subtle confusion, restlessness, lethargy) — before vital sign changes, before pupil changes. Waiting for the triad to 'confirm' increased ICP means you've already missed the window where intervention could have prevented herniation.",
+  glossary: [
+    { term: 'Monro-Kellie doctrine', definition: 'The principle that the skull is a fixed-volume container of brain, blood, and CSF — an increase in any one component must be offset by a decrease in another, or ICP rises.' },
+    { term: 'cerebral edema', definition: 'Swelling of brain tissue that increases intracranial volume — one of the three things (with blood and CSF) whose growth can overwhelm the skull\'s fixed-volume compensation.' },
+    { term: 'Cerebral Perfusion Pressure', definition: 'CPP = MAP − ICP. The pressure actually driving blood into the brain; it falls as ICP rises even if blood pressure looks normal.' },
+    { term: 'herniation', definition: 'Physical displacement of brain tissue from a higher-pressure compartment into a lower-pressure one under severe, uncompensated ICP — including displacement of the brainstem, which is life-threatening.' },
+    { term: "Cushing's triad", definition: 'Widened pulse pressure with hypertension, bradycardia, and irregular respirations — a late, ominous sign of brainstem compression from impending herniation, not an early warning sign.' },
+  ],
+  recallChecks: [
+    {
+      question: 'What three components fill the skull per the Monro-Kellie doctrine?',
+      answer: 'Brain tissue (~80%), blood (~10%), and CSF (~10%) — all inside a fixed-volume box.',
+    },
+    {
+      question: "What's the earliest indicator of rising ICP, before any vital sign changes?",
+      answer: 'A subtle change in level of consciousness — restlessness, confusion, or lethargy.',
+    },
+    {
+      question: 'What is the formula for cerebral perfusion pressure?',
+      answer: 'CPP = MAP − ICP.',
+    },
+    {
+      question: 'Why is aggressive prophylactic hyperventilation no longer routine for lowering ICP?',
+      answer: 'Sustained hypocapnia causes cerebral vasoconstriction severe enough to cause ischemia — it is now reserved only as a brief, temporizing bridge for acute herniation.',
+    },
+  ],
+  teachBack: {
+    prompt: "Explain to a classmate why waiting for Cushing's triad to 'confirm' rising ICP is dangerous.",
+    points: [
+      "Cushing's triad reflects brainstem compression from impending herniation — it's a pre-terminal sign, not an early warning.",
+      'The earliest sign is a change in level of consciousness, which can appear well before any vital sign changes.',
+      'Waiting for objective vital-sign confirmation means missing the window where intervention could have prevented herniation.',
+      "A strong explanation names the actual timeline: LOC change first, pupil changes later, Cushing's triad last.",
+    ],
+  },
   quiz: [
     {
       id: 'icp-1',

@@ -8,23 +8,57 @@ export const ards: Module = {
   pathoChain: [
     {
       heading: 'Diffuse alveolar damage from a systemic insult',
-      body: [
-        "ARDS is a syndrome, not a disease — a final common pathway from things like sepsis, pneumonia, aspiration, trauma, pancreatitis, or massive transfusion. Whatever the trigger, it causes diffuse damage to the alveolar-capillary membrane throughout both lungs.",
-        "That damaged membrane becomes leaky. Protein-rich fluid floods into the alveoli — this is pulmonary edema, but non-cardiogenic: the heart and its pumping pressure are not the problem here, the membrane itself failed.",
+      blocks: [
+        {
+          type: 'p',
+          text: 'ARDS is a syndrome, not a disease — a final common pathway from things like sepsis, pneumonia, aspiration, trauma, pancreatitis, or massive transfusion. Whatever the trigger, it causes diffuse damage to the alveolar-capillary membrane throughout both lungs.',
+        },
+        {
+          type: 'p',
+          text: 'That damaged membrane becomes leaky. Protein-rich fluid floods into the alveoli — this is pulmonary edema, but non-cardiogenic: the heart and its pumping pressure are not the problem here, the membrane itself failed.',
+        },
+        {
+          type: 'bedside',
+          text: "New bilateral crackles and climbing oxygen requirements within a week of a big hit — sepsis, aspiration, massive transfusion, trauma — is your bedside trigger to think ARDS, especially when the chest X-ray shows fresh bilateral infiltrates that don't fit a simple pneumonia picture.",
+        },
       ],
     },
     {
       heading: 'Flooded alveoli → shunt physiology → refractory hypoxemia',
-      body: [
-        "Fluid-filled and collapsed alveoli can't participate in gas exchange, but blood keeps flowing past them anyway. That's intrapulmonary shunt: blood passing through the lung without ever picking up oxygen, then mixing back into arterial circulation.",
-        "This is the key mechanical fact that drives everything downstream: shunted blood does not respond to supplemental oxygen. Cranking FiO2 to 100% barely moves the needle, because the problem isn't a lack of oxygen in the alveoli that ARE working — it's that a huge fraction of blood is bypassing functional alveoli entirely. Refractory hypoxemia despite high FiO2 is the hallmark.",
+      blocks: [
+        {
+          type: 'p',
+          text: "Fluid-filled and collapsed alveoli can't participate in gas exchange, but blood keeps flowing past them anyway. That's intrapulmonary shunt: blood passing through the lung without ever picking up oxygen, then mixing back into arterial circulation.",
+        },
+        {
+          type: 'p',
+          text: "This is the key mechanical fact that drives everything downstream: shunted blood does not respond to supplemental oxygen. Cranking FiO2 to 100% barely moves the needle, because the problem isn't a lack of oxygen in the alveoli that ARE working — it's that a huge fraction of blood is bypassing functional alveoli entirely. Refractory hypoxemia despite high FiO2 is the hallmark.",
+        },
+        {
+          type: 'trap',
+          text: "Watching a nurse chase a falling sat by dialing FiO2 up to 100% and stopping there, without touching PEEP, is the trap in real time. Once you're maxed on FiO2 and still hypoxic, the next move is PEEP and recruitment, not accepting the low sat or waiting.",
+        },
       ],
     },
     {
       heading: 'Stiff, non-compliant lungs and the ventilator dilemma',
-      body: [
-        "Damaged alveoli plus loss of surfactant means the lungs become stiff and non-compliant. Normal tidal volumes now generate dangerously high pressures in the alveoli that ARE still open, over-distending them (volutrauma) and worsening the injury — this is called ventilator-induced lung injury.",
-        "So mechanical ventilation, the thing meant to save the patient, is also capable of making the underlying injury worse if it's not managed with lung-protective strategy.",
+      blocks: [
+        {
+          type: 'p',
+          text: 'Damaged alveoli plus loss of surfactant means the lungs become stiff and non-compliant. Normal tidal volumes now generate dangerously high pressures in the alveoli that ARE still open, over-distending them (volutrauma) and worsening the injury — this is called ventilator-induced lung injury.',
+        },
+        {
+          type: 'p',
+          text: "So mechanical ventilation, the thing meant to save the patient, is also capable of making the underlying injury worse if it's not managed with lung-protective strategy.",
+        },
+        {
+          type: 'howtested',
+          text: 'NCLEX will hand you a plateau pressure reading and expect you to flag anything ≥30 cmH2O as a volutrauma risk requiring a tidal volume adjustment — not just a number to record on the flowsheet.',
+        },
+        {
+          type: 'anchor',
+          text: 'Anchor the numbers: 6-30-permissive. Tidal volume ~6 mL/kg predicted body weight, plateau pressure under 30, and permissive hypercapnia is an accepted tradeoff.',
+        },
       ],
     },
   ],
@@ -39,6 +73,39 @@ export const ards: Module = {
   ],
   outsiderFlag:
     "Students default to 'hypoxemia = more oxygen' because that pattern works for most respiratory problems they've studied. The hidden assumption is that all hypoxemia responds to supplemental oxygen. Shunt physiology breaks that assumption completely — refractory hypoxemia despite high FiO2 is the defining feature of ARDS precisely because the fix isn't more oxygen, it's recruiting collapsed alveoli (PEEP, proning) so blood actually passes functional lung tissue. Reaching for FiO2 first, instead of asking about PEEP and positioning, is the tell that someone doesn't understand what's mechanically broken.",
+  glossary: [
+    { term: 'intrapulmonary shunt', definition: "Blood passing through the lungs without ever contacting a functional, ventilated alveolus, so it never picks up oxygen — the core mechanism behind ARDS's refractory hypoxemia." },
+    { term: 'refractory hypoxemia', definition: "Low oxygen saturation that doesn't meaningfully improve even at high FiO2 — the hallmark of shunt physiology rather than simple V/Q mismatch." },
+    { term: 'volutrauma', definition: 'Lung injury from alveolar over-distension caused by tidal volumes that are too large for stiff, non-compliant ARDS lungs.' },
+    { term: 'ventilator-induced lung injury', definition: 'Additional lung damage caused by the mechanical ventilator itself — from excessive volume (volutrauma), pressure (barotrauma), or repeated opening/closing of alveoli (atelectrauma).' },
+  ],
+  recallChecks: [
+    {
+      question: "Why doesn't increasing FiO2 fix hypoxemia in ARDS?",
+      answer: "Because the hypoxemia comes from intrapulmonary shunt — blood bypassing collapsed, fluid-filled alveoli entirely — so raising the oxygen concentration in alveoli that are already working doesn't reach the blood that never passes through functional lung tissue.",
+    },
+    {
+      question: 'What two numbers anchor the ARDSnet lung-protective ventilation strategy?',
+      answer: 'Tidal volume of 4–6 mL/kg predicted body weight, and plateau pressure kept under 30 cmH2O.',
+    },
+    {
+      question: 'At what P/F ratio does prone positioning show a mortality benefit?',
+      answer: 'A P/F ratio under 150 — moderate-to-severe ARDS, per the PROSEVA trial.',
+    },
+    {
+      question: 'Why is conservative fluid management preferred once an ARDS patient is hemodynamically stable?',
+      answer: 'Per the FACTT trial, conservative fluids improve lung function and shorten ventilator days — the opposite instinct from early aggressive resuscitation.',
+    },
+  ],
+  teachBack: {
+    prompt: "Explain to a classmate why cranking FiO2 to 100% doesn't fix an ARDS patient's hypoxemia, and what actually does.",
+    points: [
+      "Shunt physiology means blood is bypassing collapsed, fluid-filled alveoli entirely — raising the oxygen concentration in alveoli that ARE working doesn't touch blood that never passes through them.",
+      'PEEP recruits collapsed alveoli, directly reducing the shunt fraction — that is the mechanistic fix, not more oxygen.',
+      'Prone positioning helps for the same reason: it recruits dorsal lung regions that collapse under gravity when supine.',
+      "A strong explanation names 'shunt' specifically, not just 'the lungs are bad,' and can say why oxygen concentration is the wrong lever for that mechanism.",
+    ],
+  },
   quiz: [
     {
       id: 'ards-1',
