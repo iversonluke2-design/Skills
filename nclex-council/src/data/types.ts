@@ -25,6 +25,12 @@ export type TeachBack = {
   points: string[]
 }
 
+export type WriteAlongItem = {
+  prompt: string
+  answer: string
+  hint: string
+}
+
 export type QuizChoice = {
   id: string
   text: string
@@ -44,6 +50,65 @@ export type QuizQuestion = {
   ngnNote?: string
 }
 
+export type VitalSign = {
+  label: string
+  value: string
+  flagged?: boolean
+}
+
+export type LabValue = {
+  label: string
+  value: string
+  flagged?: boolean
+}
+
+export type ChartTab =
+  | { id: string; label: string; kind: 'vitals'; items: VitalSign[] }
+  | { id: string; label: string; kind: 'labs'; items: LabValue[] }
+  | { id: string; label: string; kind: 'notes'; text: string }
+
+export type MatrixOption = {
+  id: string
+  label: string
+}
+
+export type MatrixRow = {
+  id: string
+  label: string
+  correctOptionId: string
+  rationale: string
+}
+
+export type MatrixQuestion = {
+  id: string
+  type: 'matrix'
+  stem: string
+  options: MatrixOption[]
+  rows: MatrixRow[]
+}
+
+export type ClozeBlank = {
+  id: string
+  choices: string[]
+  correct: string
+}
+
+export type ClozeQuestion = {
+  id: string
+  type: 'cloze'
+  template: string
+  blanks: ClozeBlank[]
+  rationale: string
+}
+
+export type CaseQuestion = QuizQuestion | MatrixQuestion | ClozeQuestion
+
+export type CaseStudy = {
+  scenario: string
+  chart: ChartTab[]
+  questions: CaseQuestion[]
+}
+
 export type Module = {
   id: string
   title: string
@@ -55,6 +120,8 @@ export type Module = {
   glossary: GlossaryTerm[]
   recallChecks: RecallCheckItem[]
   teachBack: TeachBack
+  writeAlong: WriteAlongItem[]
+  caseStudy: CaseStudy
   quiz: QuizQuestion[]
   chairman: {
     cannotMiss: string

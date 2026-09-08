@@ -28,7 +28,16 @@ const MODULE_ICONS: Record<string, ComponentType<{ className?: string }>> = {
 type Props = {
   modules: Module[]
   progress: Record<string, ModuleProgress>
-  activeView: 'list' | 'study' | 'quiz' | 'results' | 'progress' | 'quiz-setup' | 'custom-quiz' | 'custom-results'
+  activeView:
+    | 'list'
+    | 'study'
+    | 'quiz'
+    | 'results'
+    | 'case-study'
+    | 'progress'
+    | 'quiz-setup'
+    | 'custom-quiz'
+    | 'custom-results'
   activeModuleId?: string
   onSelectModule: (moduleId: string) => void
   onSelectProgress: () => void
@@ -74,7 +83,7 @@ export function AppSidebar({
                 const p = progress[m.id]
                 const pct = p && p.bestTotal > 0 ? Math.round((p.bestScore / p.bestTotal) * 100) : null
                 const isActive =
-                  (activeView === 'study' || activeView === 'quiz' || activeView === 'results') &&
+                  (activeView === 'study' || activeView === 'quiz' || activeView === 'results' || activeView === 'case-study') &&
                   activeModuleId === m.id
                 return (
                   <SidebarMenuItem key={m.id}>

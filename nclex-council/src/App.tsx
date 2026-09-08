@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { AppSidebar } from './components/AppSidebar'
+import { CaseStudyView } from './components/CaseStudyView'
 import { ChairmanClose } from './components/ChairmanClose'
 import type { ExamAnswer } from './components/ExamQuiz'
 import { ExamQuiz } from './components/ExamQuiz'
@@ -21,6 +22,7 @@ type View =
   | { name: 'study'; moduleId: string }
   | { name: 'quiz'; moduleId: string }
   | { name: 'results'; moduleId: string; score: number; total: number }
+  | { name: 'case-study'; moduleId: string }
   | { name: 'progress' }
   | { name: 'quiz-setup' }
   | { name: 'custom-quiz'; config: QuizStartConfig }
@@ -31,6 +33,7 @@ const VIEW_TITLES: Record<View['name'], string> = {
   study: 'Study',
   quiz: 'Quiz',
   results: 'Results',
+  'case-study': 'NGN case study',
   progress: 'Progress',
   'quiz-setup': 'New quiz',
   'custom-quiz': 'Quiz',
@@ -42,7 +45,7 @@ function App() {
   const [progress, setProgress] = useState(() => getAllProgress())
 
   const activeModule = useMemo(() => {
-    if (view.name === 'study' || view.name === 'quiz' || view.name === 'results') {
+    if (view.name === 'study' || view.name === 'quiz' || view.name === 'results' || view.name === 'case-study') {
       return getModule(view.moduleId)
     }
     return undefined
@@ -92,6 +95,7 @@ function App() {
 
           {view.name === 'study' && activeModule && (
             <ModuleStudy
+              key={activeModule.id}
               module={activeModule}
               onBack={() => setView({ name: 'list' })}
               onStartQuiz={() => {
@@ -99,6 +103,19 @@ function App() {
                 refreshProgress()
                 setView({ name: 'quiz', moduleId: activeModule.id })
               }}
+              onStartCase={() => {
+                markStudied(activeModule.id)
+                refreshProgress()
+                setView({ name: 'case-study', moduleId: activeModule.id })
+              }}
+            />
+          )}
+
+          {view.name === 'case-study' && activeModule && (
+            <CaseStudyView
+              module={activeModule}
+              caseStudy={activeModule.caseStudy}
+              onExit={() => setView({ name: 'study', moduleId: activeModule.id })}
             />
           )}
 

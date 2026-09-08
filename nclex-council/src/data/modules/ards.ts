@@ -106,6 +106,100 @@ export const ards: Module = {
       "A strong explanation names 'shunt' specifically, not just 'the lungs are bad,' and can say why oxygen concentration is the wrong lever for that mechanism.",
     ],
   },
+  writeAlong: [
+    {
+      prompt: 'A commonly used ARDSnet starting tidal volume target is _____ mL/kg predicted body weight.',
+      answer: '6',
+      hint: "It's the upper end of the 4–6 mL/kg range, often used as the initial setting.",
+    },
+    {
+      prompt: 'Plateau pressure should be kept below _____ cmH2O to avoid volutrauma.',
+      answer: '30',
+      hint: 'This is the ceiling ARDSnet lung-protective strategy targets.',
+    },
+    {
+      prompt: 'The trial that demonstrated a mortality benefit for prone positioning in severe ARDS is the _____ trial.',
+      answer: 'PROSEVA',
+      hint: 'Published in NEJM, 2013.',
+    },
+  ],
+  caseStudy: {
+    scenario:
+      "A 45-year-old is on hospital day 4 for severe pancreatitis. Nursing notices increasing work of breathing and climbing oxygen requirements overnight.",
+    chart: [
+      {
+        id: 'vitals',
+        label: 'Vitals',
+        kind: 'vitals',
+        items: [
+          { label: 'HR', value: '112 bpm', flagged: true },
+          { label: 'BP', value: '118/76 mmHg' },
+          { label: 'RR', value: '30/min', flagged: true },
+          { label: 'SpO2', value: '88% on 6L nasal cannula', flagged: true },
+          { label: 'Temp', value: '38.2°C', flagged: true },
+        ],
+      },
+      {
+        id: 'labs',
+        label: 'Labs / ABG',
+        kind: 'labs',
+        items: [
+          { label: 'PaO2', value: '58 mmHg', flagged: true },
+          { label: 'PaCO2', value: '48 mmHg', flagged: true },
+          { label: 'pH', value: '7.31', flagged: true },
+          { label: 'P/F ratio', value: '~97', flagged: true },
+        ],
+      },
+      {
+        id: 'notes',
+        label: 'Notes',
+        kind: 'notes',
+        text: 'Bilateral infiltrates on chest X-ray. No evidence of volume overload or cardiac dysfunction on echo. Onset within the past week, tied clearly to the pancreatitis admission.',
+      },
+    ],
+    questions: [
+      {
+        id: 'ards-case-1',
+        type: 'single',
+        difficulty: 'medium',
+        stem: 'Given this chart, what is the priority action?',
+        choices: [
+          { id: 'a', text: 'Prepare for intubation and initiation of lung-protective mechanical ventilation', correct: true, rationale: 'Correct — a P/F ratio of ~97 is severe ARDS, refractory to supplemental oxygen at this level, and needs escalation to protective mechanical ventilation.' },
+          { id: 'b', text: 'Increase nasal cannula flow to 8L and reassess in an hour', correct: false, rationale: 'Refractory hypoxemia from shunt at this severity will not adequately respond to more nasal cannula flow — this delays necessary escalation.' },
+          { id: 'c', text: 'Administer furosemide for suspected volume overload', correct: false, rationale: 'The echo shows no volume overload or cardiac dysfunction — this is non-cardiogenic edema (ARDS), not a fluid overload picture.' },
+          { id: 'd', text: 'Reposition to left lateral only; no further action needed', correct: false, rationale: 'Positioning alone is insufficient for a P/F ratio this low — proning may eventually help, but escalation of respiratory support is the priority now.' },
+        ],
+      },
+      {
+        id: 'ards-case-2',
+        type: 'matrix',
+        stem: 'For each finding on this chart, indicate whether it is expected in ARDS, unexpected, or requires immediate follow-up.',
+        options: [
+          { id: 'expected', label: 'Expected' },
+          { id: 'unexpected', label: 'Unexpected' },
+          { id: 'followup', label: 'Immediate follow-up' },
+        ],
+        rows: [
+          { id: 'row-cxr', label: 'Bilateral infiltrates on chest X-ray', correctOptionId: 'expected', rationale: 'Bilateral infiltrates are part of the Berlin Definition criteria for ARDS.' },
+          { id: 'row-echo', label: 'Normal echo, no volume overload', correctOptionId: 'expected', rationale: 'This supports a non-cardiogenic cause, consistent with ARDS rather than cardiogenic pulmonary edema.' },
+          { id: 'row-pf', label: 'P/F ratio of ~97', correctOptionId: 'followup', rationale: 'This defines severe ARDS and needs immediate escalation of respiratory support, not just documentation.' },
+          { id: 'row-onset', label: 'Symptom onset within a week of the pancreatitis admission', correctOptionId: 'expected', rationale: 'Onset within one week of a known insult is part of the Berlin Definition timing criteria.' },
+        ],
+      },
+      {
+        id: 'ards-case-3',
+        type: 'cloze',
+        template:
+          "This patient's P/F ratio of {{first}} meets Berlin Definition criteria for {{second}} ARDS, and the priority intervention is {{third}} rather than simply raising FiO2 further.",
+        blanks: [
+          { id: 'first', choices: ['97', '250', '310'], correct: '97' },
+          { id: 'second', choices: ['mild', 'moderate', 'severe'], correct: 'severe' },
+          { id: 'third', choices: ['PEEP titration and lung-protective ventilation', 'higher-flow nasal cannula', 'diuresis'], correct: 'PEEP titration and lung-protective ventilation' },
+        ],
+        rationale: 'A P/F ratio under 100 defines severe ARDS. Refractory hypoxemia from shunt needs PEEP/recruitment (and likely mechanical ventilation), not simply more supplemental oxygen.',
+      },
+    ],
+  },
   quiz: [
     {
       id: 'ards-1',

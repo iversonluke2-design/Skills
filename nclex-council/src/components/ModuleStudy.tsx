@@ -1,28 +1,35 @@
+import { useState } from 'react'
 import type { Module } from '../data/types'
 import { ContentBlockView } from './ContentBlockView'
+import { FlashcardsMode } from './FlashcardsMode'
+import { RandomRecallMode } from './RandomRecallMode'
 import { RecallCheck } from './RecallCheck'
 import { RichText } from './RichText'
 import { TeachBack } from './TeachBack'
 import { Button } from './ui/button'
+import { WriteAlongMode } from './WriteAlongMode'
+
+type Mode = 'read' | 'flashcards' | 'recall' | 'random' | 'write-along'
+
+const MODES: Array<{ value: Mode; label: string }> = [
+  { value: 'read', label: 'Read' },
+  { value: 'flashcards', label: 'Flashcards' },
+  { value: 'recall', label: 'Recall check' },
+  { value: 'random', label: 'Random recall' },
+  { value: 'write-along', label: 'Write-along' },
+]
 
 type Props = {
   module: Module
   onStartQuiz: () => void
+  onStartCase: () => void
   onBack: () => void
 }
 
-export function ModuleStudy({ module: m, onStartQuiz, onBack }: Props) {
+function ReadMode({ module: m }: { module: Module }) {
   return (
-    <div className="max-w-2xl mx-auto">
-      <Button variant="link" onClick={onBack} className="mb-4 h-auto p-0 text-muted-foreground hover:text-primary">
-        ← All topics
-      </Button>
-
-      <p className="text-xs uppercase tracking-wide text-primary font-semibold">{m.system}</p>
-      <h1 className="text-2xl font-bold text-foreground mt-1">{m.title}</h1>
-      <p className="text-muted-foreground mt-3 leading-relaxed italic">{m.hook}</p>
-
-      <div className="mt-8 space-y-6">
+    <>
+      <div className="space-y-6">
         {m.pathoChain.map((section, i) => (
           <div key={i} className="rounded-xl border border-border bg-card p-5">
             <h2 className="font-semibold text-foreground mb-3">{section.heading}</h2>
@@ -54,10 +61,6 @@ export function ModuleStudy({ module: m, onStartQuiz, onBack }: Props) {
       </div>
 
       <div className="mt-6">
-        <RecallCheck items={m.recallChecks} />
-      </div>
-
-      <div className="mt-6">
         <TeachBack teachBack={m.teachBack} />
       </div>
 
@@ -71,10 +74,55 @@ export function ModuleStudy({ module: m, onStartQuiz, onBack }: Props) {
           ))}
         </ul>
       </div>
+    </>
+  )
+}
 
-      <Button onClick={onStartQuiz} size="lg" className="mt-8 w-full">
-        Start quiz ({m.quiz.length} questions)
+export function ModuleStudy({ module: m, onStartQuiz, onStartCase, onBack }: Props) {
+  const [mode, setMode] = useState<Mode>('read')
+
+  return (
+    <div className="max-w-2xl mx-auto">
+      <Button variant="link" onClick={onBack} className="mb-4 h-auto p-0 text-muted-foreground hover:text-primary">
+        ← All topics
       </Button>
+
+      <p className="text-xs uppercase tracking-wide text-primary font-semibold">{m.system}</p>
+      <h1 className="text-2xl font-bold text-foreground mt-1">{m.title}</h1>
+      <p className="text-muted-foreground mt-3 leading-relaxed italic">{m.hook}</p>
+
+      <div className="mt-6 flex flex-wrap gap-2 border-b border-border pb-4">
+        {MODES.map((mo) => (
+          <button
+            key={mo.value}
+            onClick={() => setMode(mo.value)}
+            className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
+              mode === mo.value
+                ? 'border-primary bg-primary/10 text-foreground'
+                : 'border-border bg-secondary text-muted-foreground hover:border-primary/40'
+            }`}
+          >
+            {mo.label}
+          </button>
+        ))}
+      </div>
+
+      <div className="mt-6">
+        {mode === 'read' && <ReadMode module={m} />}
+        {mode === 'flashcards' && <FlashcardsMode module={m} />}
+        {mode === 'recall' && <RecallCheck items={m.recallChecks} />}
+        {mode === 'random' && <RandomRecallMode module={m} />}
+        {mode === 'write-along' && <WriteAlongMode items={m.writeAlong} />}
+      </div>
+
+      <div className="mt-8 space-y-3">
+        <Button onClick={onStartCase} variant="outline" size="lg" className="w-full border-outsider/40 text-outsider hover:bg-outsider/10">
+          NGN case study (split-panel chart + exam questions)
+        </Button>
+        <Button onClick={onStartQuiz} size="lg" className="w-full">
+          Start quiz ({m.quiz.length} questions)
+        </Button>
+      </div>
     </div>
   )
 }

@@ -106,6 +106,100 @@ export const cardiogenicShock: Module = {
       'A strong explanation also names the exception: right-sided MI with preload-dependent physiology, where fluid actually can help.',
     ],
   },
+  writeAlong: [
+    {
+      prompt: 'In cardiogenic shock, systemic vascular resistance is typically _____ (high or low).',
+      answer: 'high',
+      hint: 'Compensatory vasoconstriction — the opposite direction from septic shock.',
+    },
+    {
+      prompt: 'The definitive treatment for cardiogenic shock caused by an acute MI is emergent _____.',
+      answer: 'revascularization',
+      hint: 'PCI or CABG — restoring blood flow to the occluded artery.',
+    },
+    {
+      prompt: 'Inotropes like dobutamine improve _____ without the same afterload penalty as pure vasoconstrictors.',
+      answer: 'contractility',
+      hint: "The heart's squeeze strength.",
+    },
+  ],
+  caseStudy: {
+    scenario:
+      'A 71-year-old presents 6 hours after onset of crushing chest pain, found to have a large anterior STEMI. Post-cath, admitted to the ICU.',
+    chart: [
+      {
+        id: 'vitals',
+        label: 'Vitals',
+        kind: 'vitals',
+        items: [
+          { label: 'HR', value: '116 bpm', flagged: true },
+          { label: 'BP', value: '84/58 mmHg', flagged: true },
+          { label: 'RR', value: '24/min', flagged: true },
+          { label: 'SpO2', value: '90% on 4L nasal cannula', flagged: true },
+          { label: 'Temp', value: '36.8°C' },
+        ],
+      },
+      {
+        id: 'labs',
+        label: 'Labs',
+        kind: 'labs',
+        items: [
+          { label: 'Troponin', value: 'Markedly elevated', flagged: true },
+          { label: 'Lactate', value: '3.0 mmol/L', flagged: true },
+          { label: 'BNP', value: 'Elevated', flagged: true },
+          { label: 'Cardiac index', value: '1.8 L/min/m²', flagged: true },
+        ],
+      },
+      {
+        id: 'notes',
+        label: 'Notes',
+        kind: 'notes',
+        text: 'Crackles bilaterally to mid-lung fields. JVD present. Skin cool and mottled to the knees. Urine output 10 mL/hr over the last 2 hours. Capillary refill 4 seconds.',
+      },
+    ],
+    questions: [
+      {
+        id: 'cardiogenic-case-1',
+        type: 'single',
+        difficulty: 'medium',
+        stem: 'Given this chart, which pending order should the nurse question?',
+        choices: [
+          { id: 'a', text: 'A 500 mL normal saline bolus', correct: true, rationale: 'Correct to question — crackles and JVD indicate pulmonary congestion already present; more fluid volume would worsen pulmonary edema in this pump-failure picture.' },
+          { id: 'b', text: 'Start a dobutamine infusion', correct: false, rationale: 'Appropriate — an inotrope fits this low-cardiac-index, pump-failure picture.' },
+          { id: 'c', text: 'Prepare for possible IABP or Impella placement per cardiology', correct: false, rationale: 'Appropriate — mechanical circulatory support is a reasonable escalation given the severity here.' },
+          { id: 'd', text: 'Obtain a stat repeat ECG', correct: false, rationale: 'Appropriate — monitoring for ongoing ischemia or new arrhythmia post-STEMI is standard.' },
+        ],
+      },
+      {
+        id: 'cardiogenic-case-2',
+        type: 'matrix',
+        stem: 'For each finding on this chart, indicate whether it is expected in cardiogenic shock or requires immediate follow-up.',
+        options: [
+          { id: 'expected', label: 'Expected' },
+          { id: 'unexpected', label: 'Unexpected' },
+          { id: 'followup', label: 'Immediate follow-up' },
+        ],
+        rows: [
+          { id: 'row-crackles', label: 'Crackles and JVD', correctOptionId: 'expected', rationale: 'Classic backward-failure findings from a failing left ventricle.' },
+          { id: 'row-skin', label: 'Cool, mottled skin to the knees', correctOptionId: 'expected', rationale: 'A classic forward-failure/poor-perfusion finding from low cardiac output.' },
+          { id: 'row-uop', label: 'Urine output 10 mL/hr over 2 hours', correctOptionId: 'followup', rationale: 'This trend signals worsening renal perfusion and needs to factor into escalation decisions now, not just be noted.' },
+          { id: 'row-ci', label: 'Cardiac index 1.8 L/min/m²', correctOptionId: 'followup', rationale: 'A cardiac index this low defines the severity of pump failure and should directly drive the choice of inotrope or mechanical support.' },
+        ],
+      },
+      {
+        id: 'cardiogenic-case-3',
+        type: 'cloze',
+        template:
+          "This patient's low cardiac index and pulmonary congestion reflect {{first}}. The ordered fluid bolus should be {{second}}, and the team should prioritize {{third}} to improve forward flow.",
+        blanks: [
+          { id: 'first', choices: ['pump failure with volume already excessive centrally', 'hypovolemia', 'vasodilation'], correct: 'pump failure with volume already excessive centrally' },
+          { id: 'second', choices: ['questioned or held', 'doubled', 'given as a rapid bolus'], correct: 'questioned or held' },
+          { id: 'third', choices: ['inotropic support and/or mechanical circulatory support', 'additional crystalloid', 'antipyretics'], correct: 'inotropic support and/or mechanical circulatory support' },
+        ],
+        rationale: 'Low cardiac index with signs of pulmonary congestion (crackles, JVD) means the problem is pump failure, not volume depletion — more fluid worsens pulmonary edema, while inotropes or mechanical support address the actual forward-flow problem.',
+      },
+    ],
+  },
   quiz: [
     {
       id: 'cardiogenic-1',

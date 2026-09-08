@@ -108,6 +108,99 @@ export const icp: Module = {
       "A strong explanation names the actual timeline: LOC change first, pupil changes later, Cushing's triad last.",
     ],
   },
+  writeAlong: [
+    {
+      prompt: 'CPP = MAP − _____.',
+      answer: 'ICP',
+      hint: 'The pressure being subtracted from mean arterial pressure.',
+    },
+    {
+      prompt: 'The earliest indicator of rising ICP is a change in level of consciousness, often abbreviated _____.',
+      answer: 'LOC',
+      hint: 'Three letters.',
+    },
+    {
+      prompt: "Cushing's triad includes hypertension with widened pulse pressure, _____, and irregular respirations.",
+      answer: 'bradycardia',
+      hint: 'The heart rate change — opposite of what you might expect with hypertension.',
+    },
+  ],
+  caseStudy: {
+    scenario:
+      'A 34-year-old s/p motorcycle collision is 6 hours post-op after evacuation of an epidural hematoma. Nursing notes the patient is harder to arouse this shift than last.',
+    chart: [
+      {
+        id: 'vitals',
+        label: 'Vitals',
+        kind: 'vitals',
+        items: [
+          { label: 'HR', value: '58 bpm, trending down', flagged: true },
+          { label: 'BP', value: '168/54 mmHg', flagged: true },
+          { label: 'RR', value: '10/min, irregular', flagged: true },
+          { label: 'Temp', value: '37.0°C' },
+          { label: 'SpO2', value: '97%' },
+        ],
+      },
+      {
+        id: 'labs',
+        label: 'Neuro numbers',
+        kind: 'labs',
+        items: [
+          { label: 'ICP', value: '32 mmHg', flagged: true },
+          { label: 'MAP', value: '96 mmHg' },
+          { label: 'CPP (calculated)', value: '64 mmHg' },
+        ],
+      },
+      {
+        id: 'notes',
+        label: 'Notes',
+        kind: 'notes',
+        text: 'Two hours ago, patient was arousable to voice and moving all extremities to command. Now requires painful stimuli to open eyes and is not consistently following commands. Left pupil now 5mm and sluggish; right pupil 3mm and brisk.',
+      },
+    ],
+    questions: [
+      {
+        id: 'icp-case-1',
+        type: 'single',
+        difficulty: 'hard',
+        stem: 'Given this vital sign pattern (HR 58, BP 168/54, RR 10 irregular), what is the priority action?',
+        choices: [
+          { id: 'a', text: 'Notify the provider immediately — this vital sign pattern indicates impending herniation', correct: true, rationale: "Correct. This is Cushing's triad — a late, ominous sign of brainstem compression requiring emergent notification and intervention, not routine monitoring." },
+          { id: 'b', text: 'Document the vitals and recheck in one hour per routine protocol', correct: false, rationale: 'This is a neurological emergency, not a routine recheck interval — waiting an hour risks progression to full herniation.' },
+          { id: 'c', text: 'Administer a beta-blocker to treat the hypertension', correct: false, rationale: 'The hypertension here is compensatory (Cushing\'s reflex) trying to preserve cerebral perfusion against rising ICP — treating it directly can worsen cerebral ischemia.' },
+          { id: 'd', text: 'Attribute the bradycardia to residual anesthesia and continue routine monitoring', correct: false, rationale: 'This dismisses a critical finding as benign — dangerous given the post-op TBI context and accompanying exam changes.' },
+        ],
+      },
+      {
+        id: 'icp-case-2',
+        type: 'matrix',
+        stem: 'For each finding on this chart, classify its clinical significance.',
+        options: [
+          { id: 'reassuring', label: 'Reassuring' },
+          { id: 'early', label: 'Early warning' },
+          { id: 'late', label: 'Late / ominous' },
+        ],
+        rows: [
+          { id: 'row-cpp', label: 'CPP calculated at 64 mmHg (within 60–70 target)', correctOptionId: 'reassuring', rationale: 'This number is reassuring in isolation, but it must be interpreted alongside the exam and vital sign trend — not used to override them.' },
+          { id: 'row-loc', label: 'Requires painful stimuli to arouse (down from arousable to voice)', correctOptionId: 'late', rationale: 'A significant decline in level of consciousness over just two hours is a serious, late sign of deterioration.' },
+          { id: 'row-pupil', label: 'New sluggish, dilated left pupil', correctOptionId: 'late', rationale: 'A new sluggish, dilated pupil reflects oculomotor nerve compression from herniation — an ominous sign.' },
+          { id: 'row-triad', label: "Widened pulse pressure with bradycardia and irregular respirations", correctOptionId: 'late', rationale: "This is Cushing's triad — reflects brainstem compression and impending herniation." },
+        ],
+      },
+      {
+        id: 'icp-case-3',
+        type: 'cloze',
+        template:
+          "This patient's exam shows {{first}}, which together represent {{second}}. Despite a CPP within the target range, the priority action is to {{third}} immediately.",
+        blanks: [
+          { id: 'first', choices: ["Cushing's triad", 'a normal neuro exam', 'signs of hypoglycemia'], correct: "Cushing's triad" },
+          { id: 'second', choices: ['a reassuring trend', 'impending brainstem herniation', 'a resolving head injury'], correct: 'impending brainstem herniation' },
+          { id: 'third', choices: ['notify the provider', 'increase sedation and recheck later', 'apply a warming blanket'], correct: 'notify the provider' },
+        ],
+        rationale: "Cushing's triad plus a new pupil change indicate impending herniation — a CPP that looks numerically fine does not override this exam picture, and it requires immediate provider notification, not routine reassessment.",
+      },
+    ],
+  },
   quiz: [
     {
       id: 'icp-1',

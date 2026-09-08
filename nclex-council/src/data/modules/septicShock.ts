@@ -105,6 +105,100 @@ export const septicShock: Module = {
       "A strong explanation distinguishes distributive shock's capillary-leak physiology from hypovolemic shock's simple volume-deficit physiology.",
     ],
   },
+  writeAlong: [
+    {
+      prompt: 'The Surviving Sepsis Campaign Hour-1 bundle targets a MAP of at least _____ mmHg after fluid resuscitation.',
+      answer: '65',
+      hint: "It's the vasopressor titration target once fluids alone haven't restored pressure.",
+    },
+    {
+      prompt: 'The first-line vasopressor for septic shock is _____.',
+      answer: 'norepinephrine',
+      hint: 'Dopamine has fallen out of favor due to higher arrhythmia risk.',
+    },
+    {
+      prompt: 'Blood cultures should be drawn _____ antibiotics are administered.',
+      answer: 'before',
+      hint: 'Antibiotics can sterilize a culture if given first, hiding the causative organism.',
+    },
+  ],
+  caseStudy: {
+    scenario:
+      'A 68-year-old with a recent UTI is brought in by family for new confusion and rapid breathing. He is warm to the touch with flushed skin and bounding pulses.',
+    chart: [
+      {
+        id: 'vitals',
+        label: 'Vitals',
+        kind: 'vitals',
+        items: [
+          { label: 'HR', value: '118 bpm', flagged: true },
+          { label: 'BP', value: '84/50 mmHg', flagged: true },
+          { label: 'RR', value: '26/min', flagged: true },
+          { label: 'Temp', value: '38.9°C', flagged: true },
+          { label: 'SpO2', value: '94% room air', flagged: true },
+        ],
+      },
+      {
+        id: 'labs',
+        label: 'Labs',
+        kind: 'labs',
+        items: [
+          { label: 'Lactate', value: '4.2 mmol/L', flagged: true },
+          { label: 'WBC', value: '18.5 x10³/µL', flagged: true },
+          { label: 'Creatinine', value: '1.6 mg/dL (baseline 0.9)', flagged: true },
+          { label: 'Blood cultures', value: 'Pending' },
+        ],
+      },
+      {
+        id: 'notes',
+        label: 'Notes',
+        kind: 'notes',
+        text: 'Family reports 3 days of worsening confusion and burning with urination prior to today. Skin warm, flushed, bounding pulses. No rash. No recent travel.',
+      },
+    ],
+    questions: [
+      {
+        id: 'sepsis-case-1',
+        type: 'single',
+        difficulty: 'medium',
+        stem: 'What is the priority sequence of actions within the first hour, given this chart?',
+        choices: [
+          { id: 'a', text: 'Draw blood cultures, then begin broad-spectrum antibiotics within the hour', correct: true, rationale: 'Correct — cultures before (or without significantly delaying) antibiotics, both within the Hour-1 bundle window.' },
+          { id: 'b', text: 'Start broad-spectrum antibiotics immediately, then draw cultures whenever convenient', correct: false, rationale: 'Cultures should be drawn before antibiotics whenever possible — giving antibiotics first can sterilize the culture and hide the organism.' },
+          { id: 'c', text: 'Administer acetaminophen for the fever and reassess in 2 hours', correct: false, rationale: 'This delays the Hour-1 bundle for a finding (fever) that is not the priority here.' },
+          { id: 'd', text: 'Wait for blood culture results before starting antibiotics', correct: false, rationale: 'Antibiotics should not be delayed waiting on culture results — they are drawn first, then antibiotics start within the hour regardless.' },
+        ],
+      },
+      {
+        id: 'sepsis-case-2',
+        type: 'matrix',
+        stem: 'For each finding on this chart, indicate whether it is expected in early septic shock, unexpected, or requires immediate follow-up.',
+        options: [
+          { id: 'expected', label: 'Expected' },
+          { id: 'unexpected', label: 'Unexpected' },
+          { id: 'followup', label: 'Immediate follow-up' },
+        ],
+        rows: [
+          { id: 'row-warm', label: 'Warm, flushed skin with bounding pulses', correctOptionId: 'expected', rationale: 'Early distributive shock often presents warm and vasodilated, not cold and clammy.' },
+          { id: 'row-lactate', label: 'Lactate 4.2 mmol/L', correctOptionId: 'followup', rationale: 'A lactate ≥4 mmol/L triggers the 30 mL/kg crystalloid bolus in the Hour-1 bundle — it needs action now, not just documentation.' },
+          { id: 'row-fever', label: 'Temperature 38.9°C', correctOptionId: 'expected', rationale: 'Fever is expected with an infectious source driving the systemic inflammatory response.' },
+          { id: 'row-cr', label: 'Creatinine rising from baseline', correctOptionId: 'followup', rationale: 'A rising creatinine signals early hypoperfusion/AKI and needs to factor into resuscitation and monitoring right away.' },
+        ],
+      },
+      {
+        id: 'sepsis-case-3',
+        type: 'cloze',
+        template:
+          'This patient meets Hour-1 bundle criteria: draw {{first}}, start {{second}} within one hour, and begin a {{third}} mL/kg crystalloid bolus given the elevated lactate.',
+        blanks: [
+          { id: 'first', choices: ['blood cultures', 'urine cultures', 'sputum cultures'], correct: 'blood cultures' },
+          { id: 'second', choices: ['broad-spectrum antibiotics', 'antipyretics', 'insulin'], correct: 'broad-spectrum antibiotics' },
+          { id: 'third', choices: ['30', '10', '5'], correct: '30' },
+        ],
+        rationale: 'The Hour-1 bundle: blood cultures before antibiotics, broad-spectrum antibiotics within 1 hour, and a 30 mL/kg crystalloid bolus for hypotension or lactate ≥4 mmol/L.',
+      },
+    ],
+  },
   quiz: [
     {
       id: 'sepsis-1',

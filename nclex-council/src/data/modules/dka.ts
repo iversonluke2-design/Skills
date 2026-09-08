@@ -108,6 +108,101 @@ export const dka: Module = {
       "A strong explanation names the specific risk (hypokalemia-driven arrhythmia), not just a vague 'insulin can be risky.'",
     ],
   },
+  writeAlong: [
+    {
+      prompt: 'The insulin infusion should not be started until serum potassium is above _____ mEq/L.',
+      answer: '3.3',
+      hint: "It's the threshold below which insulin risks a dangerous further drop in potassium.",
+    },
+    {
+      prompt: 'The renal threshold above which glucose spills into the urine and drives osmotic diuresis is roughly _____ mg/dL.',
+      answer: '180',
+      hint: "Above this, the kidneys can't reabsorb all the filtered glucose.",
+    },
+    {
+      prompt: 'Once glucose drops to about 200–250 mg/dL, _____ should be added to the IV fluids so the insulin infusion can safely keep running.',
+      answer: 'dextrose',
+      hint: 'It lets treatment keep shutting off ketogenesis without crashing the glucose too far.',
+    },
+  ],
+  caseStudy: {
+    scenario:
+      "A 22-year-old with Type 1 diabetes is brought to the ED by roommates after 2 days of vomiting and 'breathing weird.' She is oriented but lethargic. Fingerstick glucose reads 'HIGH.'",
+    chart: [
+      {
+        id: 'vitals',
+        label: 'Vitals',
+        kind: 'vitals',
+        items: [
+          { label: 'HR', value: '128 bpm', flagged: true },
+          { label: 'BP', value: '98/62 mmHg', flagged: true },
+          { label: 'RR', value: '32/min, deep and labored', flagged: true },
+          { label: 'Temp', value: '37.1°C' },
+          { label: 'SpO2', value: '98% room air' },
+        ],
+      },
+      {
+        id: 'labs',
+        label: 'Labs',
+        kind: 'labs',
+        items: [
+          { label: 'Glucose', value: '618 mg/dL', flagged: true },
+          { label: 'pH', value: '7.16', flagged: true },
+          { label: 'HCO3', value: '9 mEq/L', flagged: true },
+          { label: 'Potassium', value: '3.1 mEq/L', flagged: true },
+          { label: 'Anion gap', value: '24', flagged: true },
+          { label: 'Beta-hydroxybutyrate', value: 'Elevated', flagged: true },
+        ],
+      },
+      {
+        id: 'notes',
+        label: 'Notes',
+        kind: 'notes',
+        text: "Roommates report she ran out of insulin 3 days ago and 'figured she'd be fine for a few days.' No fever, cough, or dysuria reported. Denies chest pain.",
+      },
+    ],
+    questions: [
+      {
+        id: 'dka-case-1',
+        type: 'single',
+        difficulty: 'medium',
+        stem: 'Based on this chart, what is the FIRST action, before addressing potassium or starting insulin?',
+        choices: [
+          { id: 'a', text: 'Begin isotonic crystalloid (0.9% NaCl) to restore perfusion', correct: true, rationale: 'Correct — fluids come first in the sequence: restore perfusion, then confirm/correct potassium, then start insulin.' },
+          { id: 'b', text: 'Administer potassium replacement immediately', correct: false, rationale: 'Potassium status matters, but fluids to restore perfusion come first in the standard sequence.' },
+          { id: 'c', text: 'Start the insulin infusion at the ordered rate', correct: false, rationale: 'Insulin should not be the first move — potassium is only 3.1, and perfusion hasn\'t been addressed yet.' },
+          { id: 'd', text: 'Administer sodium bicarbonate for the acidosis', correct: false, rationale: 'Routine bicarb is not standard for DKA except in extreme acidosis (roughly pH < 6.9).' },
+        ],
+      },
+      {
+        id: 'dka-case-2',
+        type: 'matrix',
+        stem: 'For each finding on this chart, indicate whether it is expected in DKA, unexpected in DKA, or requires immediate follow-up before proceeding.',
+        options: [
+          { id: 'expected', label: 'Expected' },
+          { id: 'unexpected', label: 'Unexpected' },
+          { id: 'followup', label: 'Immediate follow-up' },
+        ],
+        rows: [
+          { id: 'row-kussmaul', label: 'Deep, labored respirations (RR 32)', correctOptionId: 'expected', rationale: 'Kussmaul breathing is the expected respiratory compensation for the metabolic acidosis.' },
+          { id: 'row-k', label: 'Potassium 3.1 mEq/L', correctOptionId: 'followup', rationale: 'This must be addressed (replacement) before insulin is started — it is not simply an expected finding to note and move past.' },
+          { id: 'row-tachy', label: 'HR 128 bpm', correctOptionId: 'expected', rationale: 'Tachycardia is expected from dehydration/hypovolemia in DKA.' },
+          { id: 'row-fever', label: 'Temperature 37.1°C (afebrile)', correctOptionId: 'expected', rationale: 'DKA itself does not cause fever — an infectious trigger would show fever, so being afebrile here is unremarkable, not a red flag needing follow-up.' },
+        ],
+      },
+      {
+        id: 'dka-case-3',
+        type: 'cloze',
+        template: 'Given this chart, the priority sequence is: {{first}} → confirm and correct {{second}} → start the {{third}} infusion.',
+        blanks: [
+          { id: 'first', choices: ['isotonic fluids', 'insulin', 'bicarbonate'], correct: 'isotonic fluids' },
+          { id: 'second', choices: ['potassium', 'sodium', 'calcium'], correct: 'potassium' },
+          { id: 'third', choices: ['insulin', 'dextrose', 'mannitol'], correct: 'insulin' },
+        ],
+        rationale: 'Fluids first restore perfusion, potassium status is confirmed and corrected next, and only then does the insulin infusion start — reversing this order risks arrhythmia or worsened shock.',
+      },
+    ],
+  },
   quiz: [
     {
       id: 'dka-1',
