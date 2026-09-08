@@ -6,6 +6,7 @@ import { ChairmanClose } from './components/ChairmanClose'
 import type { ExamAnswer } from './components/ExamQuiz'
 import { ExamQuiz } from './components/ExamQuiz'
 import { FlashcardsPage } from './components/FlashcardsPage'
+import { HomeChat } from './components/HomeChat'
 import { ModuleStudy } from './components/ModuleStudy'
 import { ProgressDashboard } from './components/ProgressDashboard'
 import { Quiz } from './components/Quiz'
@@ -16,8 +17,16 @@ import { StudyGuidePage } from './components/StudyGuide'
 import { TopicList } from './components/TopicList'
 import { Separator } from './components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from './components/ui/sidebar'
-import type { StudyMode } from './data/types'
-import { createProject, getAllProjects } from './lib/projects'
+import type { Module, StudyMode } from './data/types'
+import {
+  addModule,
+  createProject,
+  deleteModule,
+  deleteProject,
+  getAllProjects,
+  renameModule,
+  renameProject,
+} from './lib/projects'
 import type { AnswerDetail } from './lib/quizPool'
 import { getAllProgress, markStudied, recordAttempt } from './lib/progress'
 
@@ -118,6 +127,40 @@ function App() {
     setView({ name: 'list' })
   }
 
+  function handleRenameProject(projectId: string, name: string, description: string) {
+    renameProject(projectId, name, description)
+    setProjects(getAllProjects())
+  }
+
+  function handleDeleteProject(projectId: string) {
+    deleteProject(projectId)
+    const remaining = getAllProjects()
+    setProjects(remaining)
+    if (projectId === activeProjectId) {
+      setActiveProjectId(remaining[0]?.id ?? '')
+      setView({ name: 'list' })
+    }
+  }
+
+  function handleModuleCreated(module: Module) {
+    if (!activeProject) return
+    addModule(activeProject.id, module)
+    setProjects(getAllProjects())
+  }
+
+  function handleRenameModule(moduleId: string, title: string) {
+    renameModule(moduleId, title)
+    setProjects(getAllProjects())
+  }
+
+  function handleDeleteModule(moduleId: string) {
+    deleteModule(moduleId)
+    setProjects(getAllProjects())
+    if (activeModule?.id === moduleId) {
+      setView({ name: 'list' })
+    }
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar
@@ -128,12 +171,16 @@ function App() {
           setView({ name: 'list' })
         }}
         onCreateProject={handleCreateProject}
+        onRenameProject={handleRenameProject}
+        onDeleteProject={handleDeleteProject}
         modules={modules}
         progress={progress}
         activeView={view.name}
         activeModuleId={activeModule?.id}
         activeMode={VIEW_TO_MODE[view.name]}
         onSelectMode={handleSelectMode}
+        onRenameModule={handleRenameModule}
+        onDeleteModule={handleDeleteModule}
         onSelectProgress={() => setView({ name: 'progress' })}
         onSelectHome={() => setView({ name: 'list' })}
         onSelectNewQuiz={() => setView({ name: 'quiz-setup' })}
@@ -148,12 +195,15 @@ function App() {
         </header>
 
         <main className="flex-1 overflow-y-auto px-4 py-8">
-          {view.name === 'list' && (
-            <TopicList
-              modules={modules}
-              progress={progress}
-              onSelect={(moduleId) => handleSelectMode(moduleId, 'council')}
-            />
+          {view.name === 'list' && activeProject && (
+            <>
+              <HomeChat projectName={activeProject.name} onModuleCreated={handleModuleCreated} />
+              <TopicList
+                modules={modules}
+                progress={progress}
+                onSelect={(moduleId) => handleSelectMode(moduleId, 'council')}
+              />
+            </>
           )}
 
           {view.name === 'study' && activeModule && (

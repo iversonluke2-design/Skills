@@ -3,6 +3,7 @@ import {
   BarChart3,
   BookOpen,
   Brain,
+  Check,
   ChevronRight,
   ClipboardList,
   Crown,
@@ -11,11 +12,14 @@ import {
   HeartPulse,
   LayoutGrid,
   ListPlus,
+  Pencil,
   Plus,
   Repeat,
+  Trash2,
   Wind,
+  X,
 } from 'lucide-react'
-import { useState, type ComponentType } from 'react'
+import { useState, type ComponentType, type MouseEvent } from 'react'
 import type { Module, Project, StudyMode } from '../data/types'
 import type { ModuleProgress } from '../lib/progress'
 import { Button } from './ui/button'
@@ -60,12 +64,16 @@ type Props = {
   activeProjectId: string
   onSelectProject: (projectId: string) => void
   onCreateProject: (name: string, description: string) => void
+  onRenameProject: (projectId: string, name: string, description: string) => void
+  onDeleteProject: (projectId: string) => void
   modules: Module[]
   progress: Record<string, ModuleProgress>
   activeView: string
   activeModuleId?: string
   activeMode?: StudyMode
   onSelectMode: (moduleId: string, mode: StudyMode) => void
+  onRenameModule: (moduleId: string, title: string) => void
+  onDeleteModule: (moduleId: string) => void
   onSelectProgress: () => void
   onSelectHome: () => void
   onSelectNewQuiz: () => void
@@ -76,12 +84,16 @@ export function AppSidebar({
   activeProjectId,
   onSelectProject,
   onCreateProject,
+  onRenameProject,
+  onDeleteProject,
   modules,
   progress,
   activeView,
   activeModuleId,
   activeMode,
   onSelectMode,
+  onRenameModule,
+  onDeleteModule,
   onSelectProgress,
   onSelectHome,
   onSelectNewQuiz,
@@ -91,6 +103,10 @@ export function AppSidebar({
   const [newProjectName, setNewProjectName] = useState('')
   const [newProjectDesc, setNewProjectDesc] = useState('')
   const [expandedTopicId, setExpandedTopicId] = useState<string | undefined>(activeModuleId)
+  const [editingProjectId, setEditingProjectId] = useState<string | null>(null)
+  const [editProjectName, setEditProjectName] = useState('')
+  const [editingModuleId, setEditingModuleId] = useState<string | null>(null)
+  const [editModuleTitle, setEditModuleTitle] = useState('')
 
   const activeProject = projects.find((p) => p.id === activeProjectId)
 
@@ -101,6 +117,44 @@ export function AppSidebar({
     setNewProjectDesc('')
     setNewProjectOpen(false)
     setProjectPickerOpen(false)
+  }
+
+  function startEditProject(p: Project, e: MouseEvent) {
+    e.stopPropagation()
+    setEditingProjectId(p.id)
+    setEditProjectName(p.name)
+  }
+
+  function submitEditProject(p: Project) {
+    if (editProjectName.trim().length === 0) return
+    onRenameProject(p.id, editProjectName.trim(), p.description)
+    setEditingProjectId(null)
+  }
+
+  function handleDeleteProject(p: Project, e: MouseEvent) {
+    e.stopPropagation()
+    if (window.confirm(`Delete project "${p.name}" and everything under it? This can't be undone.`)) {
+      onDeleteProject(p.id)
+    }
+  }
+
+  function startEditModule(m: Module, e: MouseEvent) {
+    e.stopPropagation()
+    setEditingModuleId(m.id)
+    setEditModuleTitle(m.title)
+  }
+
+  function submitEditModule(m: Module) {
+    if (editModuleTitle.trim().length === 0) return
+    onRenameModule(m.id, editModuleTitle.trim())
+    setEditingModuleId(null)
+  }
+
+  function handleDeleteModule(m: Module, e: MouseEvent) {
+    e.stopPropagation()
+    if (window.confirm(`Delete topic "${m.title}"? This can't be undone.`)) {
+      onDeleteModule(m.id)
+    }
   }
 
   return (
@@ -129,22 +183,50 @@ export function AppSidebar({
 
           {projectPickerOpen && (
             <div className="mx-2 mb-1 rounded-lg border border-sidebar-border bg-sidebar-accent/40 p-1.5">
-              {projects.map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => {
-                    onSelectProject(p.id)
-                    setProjectPickerOpen(false)
-                  }}
-                  className={`block w-full rounded-md px-2 py-1.5 text-left text-sm ${
-                    p.id === activeProjectId
-                      ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-                      : 'text-sidebar-foreground hover:bg-sidebar-accent'
-                  }`}
-                >
-                  {p.name}
-                </button>
-              ))}
+              {projects.map((p) =>
+                editingProjectId === p.id ? (
+                  <div key={p.id} className="flex items-center gap-1 px-1 py-1">
+                    <Input
+                      value={editProjectName}
+                      onChange={(e) => setEditProjectName(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && submitEditProject(p)}
+                      autoFocus
+                      className="h-7 flex-1 text-xs"
+                    />
+                    <button onClick={() => submitEditProject(p)} className="rounded p-1 text-accent-2 hover:bg-sidebar-accent">
+                      <Check className="size-3.5" />
+                    </button>
+                    <button onClick={() => setEditingProjectId(null)} className="rounded p-1 text-muted-foreground hover:bg-sidebar-accent">
+                      <X className="size-3.5" />
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    key={p.id}
+                    className={`group flex items-center rounded-md text-sm ${
+                      p.id === activeProjectId
+                        ? 'bg-sidebar-primary text-sidebar-primary-foreground'
+                        : 'text-sidebar-foreground hover:bg-sidebar-accent'
+                    }`}
+                  >
+                    <button
+                      onClick={() => {
+                        onSelectProject(p.id)
+                        setProjectPickerOpen(false)
+                      }}
+                      className="flex-1 truncate px-2 py-1.5 text-left"
+                    >
+                      {p.name}
+                    </button>
+                    <button onClick={(e) => startEditProject(p, e)} className="p-1 opacity-0 group-hover:opacity-100 hover:text-foreground">
+                      <Pencil className="size-3" />
+                    </button>
+                    <button onClick={(e) => handleDeleteProject(p, e)} className="mr-1 p-1 opacity-0 group-hover:opacity-100 hover:text-danger">
+                      <Trash2 className="size-3" />
+                    </button>
+                  </div>
+                ),
+              )}
 
               {!newProjectOpen ? (
                 <button
@@ -193,18 +275,54 @@ export function AppSidebar({
                 const pct = p && p.bestTotal > 0 ? Math.round((p.bestScore / p.bestTotal) * 100) : null
                 const isExpanded = expandedTopicId === m.id
                 const isTopicActive = activeModuleId === m.id && activeView !== 'list'
+                const isEditing = editingModuleId === m.id
                 return (
                   <SidebarMenuItem key={m.id}>
-                    <SidebarMenuButton
-                      isActive={isTopicActive && !isExpanded}
-                      onClick={() => setExpandedTopicId(isExpanded ? undefined : m.id)}
-                      tooltip={m.title}
-                    >
-                      <Icon />
-                      <span className="truncate">{m.title}</span>
-                      <ChevronRight className={`ml-auto transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
-                    </SidebarMenuButton>
-                    {pct !== null && <SidebarMenuBadge>{pct}%</SidebarMenuBadge>}
+                    {isEditing ? (
+                      <div className="flex items-center gap-1 px-2 py-1">
+                        <Input
+                          value={editModuleTitle}
+                          onChange={(e) => setEditModuleTitle(e.target.value)}
+                          onKeyDown={(e) => e.key === 'Enter' && submitEditModule(m)}
+                          autoFocus
+                          className="h-7 flex-1 text-xs"
+                        />
+                        <button onClick={() => submitEditModule(m)} className="rounded p-1 text-accent-2 hover:bg-sidebar-accent">
+                          <Check className="size-3.5" />
+                        </button>
+                        <button onClick={() => setEditingModuleId(null)} className="rounded p-1 text-muted-foreground hover:bg-sidebar-accent">
+                          <X className="size-3.5" />
+                        </button>
+                      </div>
+                    ) : (
+                      <SidebarMenuButton
+                        isActive={isTopicActive && !isExpanded}
+                        onClick={() => setExpandedTopicId(isExpanded ? undefined : m.id)}
+                        tooltip={m.title}
+                        className="group/topic"
+                      >
+                        <Icon />
+                        <span className="truncate">{m.title}</span>
+                        <span
+                          role="button"
+                          tabIndex={0}
+                          onClick={(e) => startEditModule(m, e)}
+                          className="ml-auto shrink-0 rounded p-0.5 opacity-0 hover:text-foreground group-hover/topic:opacity-100"
+                        >
+                          <Pencil className="size-3" />
+                        </span>
+                        <span
+                          role="button"
+                          tabIndex={0}
+                          onClick={(e) => handleDeleteModule(m, e)}
+                          className="shrink-0 rounded p-0.5 opacity-0 hover:text-danger group-hover/topic:opacity-100"
+                        >
+                          <Trash2 className="size-3" />
+                        </span>
+                        <ChevronRight className={`shrink-0 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                      </SidebarMenuButton>
+                    )}
+                    {pct !== null && !isEditing && <SidebarMenuBadge>{pct}%</SidebarMenuBadge>}
 
                     {isExpanded && (
                       <SidebarMenuSub>

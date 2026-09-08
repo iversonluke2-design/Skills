@@ -6,12 +6,32 @@ collapsible sidebar alongside a main content pane.
 ## Projects
 
 The sidebar's top item is a **project switcher** — each project is a subject
-(e.g. "ICU Critical Care", the seeded project) holding its own set of
-topics. "+ New project" creates an empty project (name + description,
-persisted in the browser); it starts with no topics, since populating a
-project with real study content is an authoring step, not something the
-app generates live. Projects are stored in `src/data/projects.ts`
-(built-in) plus `localStorage` (user-created).
+(e.g. "ICU Critical Care", the seeded project, or one you create — "Patho",
+"NUR198", whatever your course is) holding its own set of topics. "+ New
+project" creates an empty project (name + description, persisted in the
+browser); it starts with no topics — the app never invents subject matter,
+only what you upload becomes a topic. Hover a project or topic row for
+rename (pencil) and delete (trash) — these work on both built-in and
+user-created projects/topics via a `localStorage` override layer, so
+nothing about the seeded content is hard-coded as untouchable.
+
+## Uploading a lecture — the home-page chat
+
+The home view (click the app name/logo) opens with a Claude-style chat box:
+paste a lecture, reading, or notes (or attach a `.txt`/`.md` file) and it
+calls the Anthropic API **directly from your browser**, using your own
+Anthropic API key, to turn only what you gave it into a new topic under the
+active project. Nothing is invented — the model is instructed to use only
+facts present in what you pasted, and to write shorter lists rather than
+padding with fabricated detail.
+
+This requires your own Anthropic API key (get one at console.anthropic.com):
+pasted once, it's stored in `localStorage` and sent straight to Anthropic's
+API with the `anthropic-dangerous-direct-browser-access` header — no other
+server sees it. Usage is billed to your own Anthropic account, separate from
+any Claude subscription. PDFs/slides aren't parsed yet — copy the text out
+and paste it in. See `src/lib/anthropic.ts` for the generation prompt and
+`src/lib/settings.ts` for key storage.
 
 ## Per-topic modes
 
