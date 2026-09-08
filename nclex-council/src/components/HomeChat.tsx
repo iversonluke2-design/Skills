@@ -78,7 +78,12 @@ export function HomeChat({ projectName, onModuleCreated }: Props) {
         },
       ])
     } catch (err) {
-      const msg = err instanceof AnthropicError ? err.message : 'Something went wrong generating that topic — try again.'
+      const msg =
+        err instanceof AnthropicError
+          ? err.message
+          : err instanceof Error
+            ? `Something went wrong: ${err.message}`
+            : 'Something went wrong generating that topic — try again.'
       setMessages((m) => [...m, { id: `a-${Date.now()}`, role: 'assistant', text: msg, isError: true }])
     } finally {
       setBusy(false)

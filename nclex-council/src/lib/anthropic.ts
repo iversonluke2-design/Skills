@@ -76,26 +76,33 @@ export async function generateModuleFromText(apiKey: string, projectName: string
     throw new AnthropicError('That looks too short to be a lecture or reading — paste more of the material.')
   }
 
-  const response = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-      'x-api-key': apiKey.trim(),
-      'anthropic-version': '2023-06-01',
-      'anthropic-dangerous-direct-browser-access': 'true',
-    },
-    body: JSON.stringify({
-      model: MODEL,
-      max_tokens: 8000,
-      system: SYSTEM_PROMPT,
-      messages: [
-        {
-          role: 'user',
-          content: `Project/subject: ${projectName}\n\nSource material (lecture, reading, or notes) — pasted by the student:\n\n${sourceText}`,
-        },
-      ],
-    }),
-  })
+  let response: Response
+  try {
+    response = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': apiKey.trim(),
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: MODEL,
+        max_tokens: 8000,
+        system: SYSTEM_PROMPT,
+        messages: [
+          {
+            role: 'user',
+            content: `Project/subject: ${projectName}\n\nSource material (lecture, reading, or notes) — pasted by the student:\n\n${sourceText}`,
+          },
+        ],
+      }),
+    })
+  } catch (err) {
+    throw new AnthropicError(
+      `Couldn't reach the Anthropic API (${err instanceof Error ? err.message : 'network error'}). If you're on a sandboxed preview link (like a claude.ai/code/artifact/... URL), that environment blocks outside network calls entirely — this feature only works when the app is running locally (npm run dev) or deployed on its own hosting (e.g. Vercel), not inside that preview.`,
+    )
+  }
 
   if (!response.ok) {
     const body = await response.text().catch(() => '')
@@ -108,7 +115,12 @@ export async function generateModuleFromText(apiKey: string, projectName: string
     throw new AnthropicError(`Anthropic API error (${response.status}): ${body.slice(0, 300) || 'no details returned'}`)
   }
 
-  const data = (await response.json()) as { content?: Array<{ type: string; text?: string }> }
+  let data: { content?: Array<{ type: string; text?: string }> }
+  try {
+    data = await response.json()
+  } catch {
+    throw new AnthropicError('The API response could not be read — try again.')
+  }
   const text = data.content?.find((block) => block.type === 'text')?.text
   if (!text) {
     throw new AnthropicError('The API returned no text content — try again.')
