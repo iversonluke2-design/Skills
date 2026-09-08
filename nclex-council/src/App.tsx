@@ -1,25 +1,32 @@
 import { useMemo, useState } from 'react'
+import { AnkiPage } from './components/AnkiPage'
 import { AppSidebar } from './components/AppSidebar'
 import { CaseStudyView } from './components/CaseStudyView'
 import { ChairmanClose } from './components/ChairmanClose'
 import type { ExamAnswer } from './components/ExamQuiz'
 import { ExamQuiz } from './components/ExamQuiz'
+import { FlashcardsPage } from './components/FlashcardsPage'
 import { ModuleStudy } from './components/ModuleStudy'
 import { ProgressDashboard } from './components/ProgressDashboard'
 import { Quiz } from './components/Quiz'
 import { QuizResults } from './components/QuizResults'
 import type { QuizStartConfig } from './components/QuizSetup'
 import { QuizSetup } from './components/QuizSetup'
+import { StudyGuidePage } from './components/StudyGuide'
 import { TopicList } from './components/TopicList'
 import { Separator } from './components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from './components/ui/sidebar'
-import { getModule, modules } from './data/modules'
+import type { StudyMode } from './data/types'
+import { createProject, getAllProjects } from './lib/projects'
 import type { AnswerDetail } from './lib/quizPool'
 import { getAllProgress, markStudied, recordAttempt } from './lib/progress'
 
 type View =
   | { name: 'list' }
   | { name: 'study'; moduleId: string }
+  | { name: 'study-guide'; moduleId: string }
+  | { name: 'flashcards-page'; moduleId: string }
+  | { name: 'anki-page'; moduleId: string }
   | { name: 'quiz'; moduleId: string }
   | { name: 'results'; moduleId: string; score: number; total: number }
   | { name: 'case-study'; moduleId: string }
@@ -30,26 +37,56 @@ type View =
 
 const VIEW_TITLES: Record<View['name'], string> = {
   list: 'Home',
-  study: 'Study',
+  study: 'The Council',
+  'study-guide': 'Study Guide',
+  'flashcards-page': 'Flashcards',
+  'anki-page': 'Anki',
   quiz: 'Quiz',
   results: 'Results',
-  'case-study': 'NGN case study',
+  'case-study': 'Exam',
   progress: 'Progress',
   'quiz-setup': 'New quiz',
   'custom-quiz': 'Quiz',
   'custom-results': 'Results',
 }
 
+const VIEW_TO_MODE: Partial<Record<View['name'], StudyMode>> = {
+  study: 'council',
+  'study-guide': 'study-guide',
+  quiz: 'quiz',
+  'case-study': 'exam',
+  'flashcards-page': 'flashcards',
+  'anki-page': 'anki',
+}
+
+const EMPTY_MODULES: never[] = []
+
 function App() {
   const [view, setView] = useState<View>({ name: 'list' })
   const [progress, setProgress] = useState(() => getAllProgress())
+  const [projects, setProjects] = useState(() => getAllProjects())
+  const [activeProjectId, setActiveProjectId] = useState(() => projects[0]?.id ?? '')
+
+  const activeProject = useMemo(
+    () => projects.find((p) => p.id === activeProjectId) ?? projects[0],
+    [projects, activeProjectId],
+  )
+  const modules = activeProject?.modules ?? EMPTY_MODULES
 
   const activeModule = useMemo(() => {
-    if (view.name === 'study' || view.name === 'quiz' || view.name === 'results' || view.name === 'case-study') {
-      return getModule(view.moduleId)
+    if (
+      view.name === 'study' ||
+      view.name === 'study-guide' ||
+      view.name === 'flashcards-page' ||
+      view.name === 'anki-page' ||
+      view.name === 'quiz' ||
+      view.name === 'results' ||
+      view.name === 'case-study'
+    ) {
+      return modules.find((m) => m.id === view.moduleId)
     }
     return undefined
-  }, [view])
+  }, [view, modules])
 
   function refreshProgress() {
     setProgress(getAllProgress())
@@ -63,14 +100,40 @@ function App() {
     })
   }
 
+  function handleSelectMode(moduleId: string, mode: StudyMode) {
+    markStudied(moduleId)
+    refreshProgress()
+    if (mode === 'council') setView({ name: 'study', moduleId })
+    else if (mode === 'study-guide') setView({ name: 'study-guide', moduleId })
+    else if (mode === 'quiz') setView({ name: 'quiz', moduleId })
+    else if (mode === 'exam') setView({ name: 'case-study', moduleId })
+    else if (mode === 'flashcards') setView({ name: 'flashcards-page', moduleId })
+    else if (mode === 'anki') setView({ name: 'anki-page', moduleId })
+  }
+
+  function handleCreateProject(name: string, description: string) {
+    const project = createProject(name, description)
+    setProjects(getAllProjects())
+    setActiveProjectId(project.id)
+    setView({ name: 'list' })
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar
+        projects={projects}
+        activeProjectId={activeProject?.id ?? ''}
+        onSelectProject={(id) => {
+          setActiveProjectId(id)
+          setView({ name: 'list' })
+        }}
+        onCreateProject={handleCreateProject}
         modules={modules}
         progress={progress}
         activeView={view.name}
         activeModuleId={activeModule?.id}
-        onSelectModule={(moduleId) => setView({ name: 'study', moduleId })}
+        activeMode={VIEW_TO_MODE[view.name]}
+        onSelectMode={handleSelectMode}
         onSelectProgress={() => setView({ name: 'progress' })}
         onSelectHome={() => setView({ name: 'list' })}
         onSelectNewQuiz={() => setView({ name: 'quiz-setup' })}
@@ -80,7 +143,7 @@ function App() {
           <SidebarTrigger />
           <Separator orientation="vertical" className="mr-2 h-4" />
           <span className="text-sm font-medium text-foreground">
-            {activeModule ? activeModule.title : VIEW_TITLES[view.name]}
+            {activeModule ? `${activeModule.title} · ${VIEW_TITLES[view.name]}` : VIEW_TITLES[view.name]}
           </span>
         </header>
 
@@ -89,7 +152,7 @@ function App() {
             <TopicList
               modules={modules}
               progress={progress}
-              onSelect={(moduleId) => setView({ name: 'study', moduleId })}
+              onSelect={(moduleId) => handleSelectMode(moduleId, 'council')}
             />
           )}
 
@@ -98,24 +161,28 @@ function App() {
               key={activeModule.id}
               module={activeModule}
               onBack={() => setView({ name: 'list' })}
-              onStartQuiz={() => {
-                markStudied(activeModule.id)
-                refreshProgress()
-                setView({ name: 'quiz', moduleId: activeModule.id })
-              }}
-              onStartCase={() => {
-                markStudied(activeModule.id)
-                refreshProgress()
-                setView({ name: 'case-study', moduleId: activeModule.id })
-              }}
+              onStartQuiz={() => handleSelectMode(activeModule.id, 'quiz')}
+              onStartCase={() => handleSelectMode(activeModule.id, 'exam')}
             />
+          )}
+
+          {view.name === 'study-guide' && activeModule && (
+            <StudyGuidePage module={activeModule} onBack={() => setView({ name: 'list' })} />
+          )}
+
+          {view.name === 'flashcards-page' && activeModule && (
+            <FlashcardsPage module={activeModule} onBack={() => setView({ name: 'list' })} />
+          )}
+
+          {view.name === 'anki-page' && activeModule && (
+            <AnkiPage module={activeModule} onBack={() => setView({ name: 'list' })} />
           )}
 
           {view.name === 'case-study' && activeModule && (
             <CaseStudyView
               module={activeModule}
               caseStudy={activeModule.caseStudy}
-              onExit={() => setView({ name: 'study', moduleId: activeModule.id })}
+              onExit={() => setView({ name: 'list' })}
             />
           )}
 
@@ -123,7 +190,7 @@ function App() {
             <Quiz
               title={activeModule.title}
               questions={activeModule.quiz}
-              onExit={() => setView({ name: 'study', moduleId: activeModule.id })}
+              onExit={() => setView({ name: 'list' })}
               onComplete={(score, total) => {
                 recordAttempt(activeModule.id, score, total)
                 refreshProgress()

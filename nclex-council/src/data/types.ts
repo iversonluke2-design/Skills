@@ -129,3 +129,12 @@ export type Module = {
   }
   sources: string[]
 }
+
+export type Project = {
+  id: string
+  name: string
+  description: string
+  modules: Module[]
+}
+
+export type StudyMode = 'study-guide' | 'quiz' | 'exam' | 'flashcards' | 'anki' | 'council'
