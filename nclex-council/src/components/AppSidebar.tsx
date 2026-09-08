@@ -13,16 +13,14 @@ import {
   LayoutGrid,
   ListPlus,
   Pencil,
-  Plus,
   Repeat,
   Trash2,
   Wind,
   X,
 } from 'lucide-react'
 import { useState, type ComponentType, type MouseEvent } from 'react'
-import type { Module, Project, StudyMode } from '../data/types'
+import type { Module, StudyMode } from '../data/types'
 import type { ModuleProgress } from '../lib/progress'
-import { Button } from './ui/button'
 import { Input } from './ui/input'
 import {
   Sidebar,
@@ -60,12 +58,9 @@ const MODE_ITEMS: Array<{ mode: StudyMode; label: string; icon: ComponentType<{ 
 ]
 
 type Props = {
-  projects: Project[]
-  activeProjectId: string
-  onSelectProject: (projectId: string) => void
-  onCreateProject: (name: string, description: string) => void
-  onRenameProject: (projectId: string, name: string, description: string) => void
-  onDeleteProject: (projectId: string) => void
+  activeProjectName?: string
+  onOpenActiveProject: () => void
+  onOpenAllProjects: () => void
   modules: Module[]
   progress: Record<string, ModuleProgress>
   activeView: string
@@ -80,12 +75,9 @@ type Props = {
 }
 
 export function AppSidebar({
-  projects,
-  activeProjectId,
-  onSelectProject,
-  onCreateProject,
-  onRenameProject,
-  onDeleteProject,
+  activeProjectName,
+  onOpenActiveProject,
+  onOpenAllProjects,
   modules,
   progress,
   activeView,
@@ -98,45 +90,9 @@ export function AppSidebar({
   onSelectHome,
   onSelectNewQuiz,
 }: Props) {
-  const [projectPickerOpen, setProjectPickerOpen] = useState(false)
-  const [newProjectOpen, setNewProjectOpen] = useState(false)
-  const [newProjectName, setNewProjectName] = useState('')
-  const [newProjectDesc, setNewProjectDesc] = useState('')
   const [expandedTopicId, setExpandedTopicId] = useState<string | undefined>(activeModuleId)
-  const [editingProjectId, setEditingProjectId] = useState<string | null>(null)
-  const [editProjectName, setEditProjectName] = useState('')
   const [editingModuleId, setEditingModuleId] = useState<string | null>(null)
   const [editModuleTitle, setEditModuleTitle] = useState('')
-
-  const activeProject = projects.find((p) => p.id === activeProjectId)
-
-  function submitNewProject() {
-    if (newProjectName.trim().length === 0) return
-    onCreateProject(newProjectName.trim(), newProjectDesc.trim())
-    setNewProjectName('')
-    setNewProjectDesc('')
-    setNewProjectOpen(false)
-    setProjectPickerOpen(false)
-  }
-
-  function startEditProject(p: Project, e: MouseEvent) {
-    e.stopPropagation()
-    setEditingProjectId(p.id)
-    setEditProjectName(p.name)
-  }
-
-  function submitEditProject(p: Project) {
-    if (editProjectName.trim().length === 0) return
-    onRenameProject(p.id, editProjectName.trim(), p.description)
-    setEditingProjectId(null)
-  }
-
-  function handleDeleteProject(p: Project, e: MouseEvent) {
-    e.stopPropagation()
-    if (window.confirm(`Delete project "${p.name}" and everything under it? This can't be undone.`)) {
-      onDeleteProject(p.id)
-    }
-  }
 
   function startEditModule(m: Module, e: MouseEvent) {
     e.stopPropagation()
@@ -173,89 +129,23 @@ export function AppSidebar({
             </SidebarMenuButton>
           </SidebarMenuItem>
 
-          <SidebarMenuItem>
-            <SidebarMenuButton onClick={() => setProjectPickerOpen((o) => !o)} className="cursor-pointer">
-              <FolderKanban />
-              <span className="truncate">{activeProject?.name ?? 'Select project'}</span>
-              <ChevronRight className={`ml-auto transition-transform ${projectPickerOpen ? 'rotate-90' : ''}`} />
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
-          {projectPickerOpen && (
-            <div className="mx-2 mb-1 rounded-lg border border-sidebar-border bg-sidebar-accent/40 p-1.5">
-              {projects.map((p) =>
-                editingProjectId === p.id ? (
-                  <div key={p.id} className="flex items-center gap-1 px-1 py-1">
-                    <Input
-                      value={editProjectName}
-                      onChange={(e) => setEditProjectName(e.target.value)}
-                      onKeyDown={(e) => e.key === 'Enter' && submitEditProject(p)}
-                      autoFocus
-                      className="h-7 flex-1 text-xs"
-                    />
-                    <button onClick={() => submitEditProject(p)} className="rounded p-1 text-accent-2 hover:bg-sidebar-accent">
-                      <Check className="size-3.5" />
-                    </button>
-                    <button onClick={() => setEditingProjectId(null)} className="rounded p-1 text-muted-foreground hover:bg-sidebar-accent">
-                      <X className="size-3.5" />
-                    </button>
-                  </div>
-                ) : (
-                  <div
-                    key={p.id}
-                    className={`group flex items-center rounded-md text-sm ${
-                      p.id === activeProjectId
-                        ? 'bg-sidebar-primary text-sidebar-primary-foreground'
-                        : 'text-sidebar-foreground hover:bg-sidebar-accent'
-                    }`}
-                  >
-                    <button
-                      onClick={() => {
-                        onSelectProject(p.id)
-                        setProjectPickerOpen(false)
-                      }}
-                      className="flex-1 truncate px-2 py-1.5 text-left"
-                    >
-                      {p.name}
-                    </button>
-                    <button onClick={(e) => startEditProject(p, e)} className="p-1 opacity-0 group-hover:opacity-100 hover:text-foreground">
-                      <Pencil className="size-3" />
-                    </button>
-                    <button onClick={(e) => handleDeleteProject(p, e)} className="mr-1 p-1 opacity-0 group-hover:opacity-100 hover:text-danger">
-                      <Trash2 className="size-3" />
-                    </button>
-                  </div>
-                ),
-              )}
-
-              {!newProjectOpen ? (
-                <button
-                  onClick={() => setNewProjectOpen(true)}
-                  className="mt-1 flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-left text-sm text-muted-foreground hover:bg-sidebar-accent"
-                >
-                  <Plus className="size-3.5" /> New project
-                </button>
-              ) : (
-                <div className="mt-1 space-y-1.5 p-1">
-                  <Input
-                    value={newProjectName}
-                    onChange={(e) => setNewProjectName(e.target.value)}
-                    placeholder="Project name"
-                    className="h-7 text-xs"
-                  />
-                  <Input
-                    value={newProjectDesc}
-                    onChange={(e) => setNewProjectDesc(e.target.value)}
-                    placeholder="Description (optional)"
-                    className="h-7 text-xs"
-                  />
-                  <Button size="sm" className="h-7 w-full text-xs" onClick={submitNewProject}>
-                    Create
-                  </Button>
-                </div>
-              )}
-            </div>
+          {activeProjectName && (
+            <SidebarMenuItem>
+              <SidebarMenuButton onClick={onOpenActiveProject} className="cursor-pointer" tooltip={activeProjectName}>
+                <FolderKanban />
+                <span className="truncate">{activeProjectName}</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           )}
+
+          <SidebarMenuItem>
+            <button
+              onClick={onOpenAllProjects}
+              className="w-full px-2 py-1 text-left text-xs text-muted-foreground hover:text-foreground group-data-[collapsible=icon]:hidden"
+            >
+              All projects
+            </button>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
 

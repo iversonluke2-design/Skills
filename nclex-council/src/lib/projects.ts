@@ -5,6 +5,9 @@ const USER_PROJECTS_KEY = 'nclex-council:user-projects:v1'
 const PROJECT_OVERRIDES_KEY = 'nclex-council:project-overrides:v1'
 const USER_MODULES_KEY = 'nclex-council:user-modules:v1'
 const MODULE_OVERRIDES_KEY = 'nclex-council:module-overrides:v1'
+const PROJECT_ACTIVITY_KEY = 'nclex-council:project-activity:v1'
+const MODULE_META_KEY = 'nclex-council:module-meta:v1'
+const PINNED_PROJECTS_KEY = 'nclex-council:pinned-projects:v1'
 
 type StoredProject = {
   id: string
@@ -52,6 +55,38 @@ const writeUserModules = (v: Record<string, Module[]>) => writeJson(USER_MODULES
 const readModuleOverrides = () => readJson<Record<string, ModuleOverride>>(MODULE_OVERRIDES_KEY, {})
 const writeModuleOverrides = (v: Record<string, ModuleOverride>) => writeJson(MODULE_OVERRIDES_KEY, v)
 
+const readActivity = () => readJson<Record<string, string>>(PROJECT_ACTIVITY_KEY, {})
+const writeActivity = (v: Record<string, string>) => writeJson(PROJECT_ACTIVITY_KEY, v)
+
+const readModuleMeta = () => readJson<Record<string, { createdAt: string }>>(MODULE_META_KEY, {})
+const writeModuleMeta = (v: Record<string, { createdAt: string }>) => writeJson(MODULE_META_KEY, v)
+
+const readPinned = () => readJson<string[]>(PINNED_PROJECTS_KEY, [])
+const writePinned = (v: string[]) => writeJson(PINNED_PROJECTS_KEY, v)
+
+function touchProject(id: string) {
+  const activity = readActivity()
+  activity[id] = new Date().toISOString()
+  writeActivity(activity)
+}
+
+export function getProjectActivity(id: string): string | undefined {
+  return readActivity()[id]
+}
+
+export function getModuleCreatedAt(moduleId: string): string | undefined {
+  return readModuleMeta()[moduleId]?.createdAt
+}
+
+export function isProjectPinned(id: string): boolean {
+  return readPinned().includes(id)
+}
+
+export function togglePinProject(id: string) {
+  const pinned = readPinned()
+  writePinned(pinned.includes(id) ? pinned.filter((p) => p !== id) : [...pinned, id])
+}
+
 function mergeModules(projectId: string, seedModules: Module[]): Module[] {
   const overrides = readModuleOverrides()
   const userModules = readUserModules()[projectId] ?? []
@@ -77,6 +112,7 @@ export function createProject(name: string, description: string): Project {
   const id = `project-${Date.now()}-${Math.floor(Math.random() * 1000)}`
   const stored: StoredProject = { id, name, description }
   writeUserProjects([...readUserProjects(), stored])
+  touchProject(id)
   return { ...stored, modules: [] }
 }
 
@@ -84,6 +120,7 @@ export function renameProject(id: string, name: string, description: string) {
   const overrides = readProjectOverrides()
   overrides[id] = { ...overrides[id], name, description }
   writeProjectOverrides(overrides)
+  touchProject(id)
 }
 
 export function deleteProject(id: string) {
@@ -96,6 +133,12 @@ export function addModule(projectId: string, module: Module) {
   const all = readUserModules()
   all[projectId] = [...(all[projectId] ?? []), module]
   writeUserModules(all)
+
+  const meta = readModuleMeta()
+  meta[module.id] = { createdAt: new Date().toISOString() }
+  writeModuleMeta(meta)
+
+  touchProject(projectId)
 }
 
 export function renameModule(moduleId: string, title: string) {

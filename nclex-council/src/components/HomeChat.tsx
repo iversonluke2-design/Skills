@@ -2,6 +2,7 @@ import { KeyRound, Loader2, Paperclip, SendHorizontal, X } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { AnthropicError, generateModuleFromText } from '../lib/anthropic'
 import type { Module } from '../data/types'
+import { extractFileText } from '../lib/extractText'
 import { getApiKey, setApiKey } from '../lib/settings'
 import { Button } from './ui/button'
 
@@ -25,6 +26,8 @@ export function HomeChat({ projectName, onModuleCreated }: Props) {
   const [attachedFile, setAttachedFile] = useState<{ name: string; text: string } | null>(null)
   const [messages, setMessages] = useState<ChatMessage[]>([])
   const [busy, setBusy] = useState(false)
+  const [extracting, setExtracting] = useState(false)
+  const [fileError, setFileError] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   function saveKey() {
@@ -39,8 +42,16 @@ export function HomeChat({ projectName, onModuleCreated }: Props) {
     const file = e.target.files?.[0]
     e.target.value = ''
     if (!file) return
-    const text = await file.text()
-    setAttachedFile({ name: file.name, text })
+    setFileError(null)
+    setExtracting(true)
+    try {
+      const text = await extractFileText(file)
+      setAttachedFile({ name: file.name, text })
+    } catch (err) {
+      setFileError(err instanceof Error ? err.message : `Couldn't read "${file.name}".`)
+    } finally {
+      setExtracting(false)
+    }
   }
 
   async function send() {
@@ -148,7 +159,26 @@ export function HomeChat({ projectName, onModuleCreated }: Props) {
               <div className="mb-2 flex w-fit items-center gap-2 rounded-md bg-secondary px-2 py-1 text-xs text-foreground">
                 <Paperclip className="size-3" />
                 {attachedFile.name}
-                <button onClick={() => setAttachedFile(null)} className="text-muted-foreground hover:text-foreground">
+                <button
+                  onClick={() => {
+                    setAttachedFile(null)
+                    setFileError(null)
+                  }}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  <X className="size-3" />
+                </button>
+              </div>
+            )}
+            {extracting && (
+              <div className="mb-2 flex w-fit items-center gap-2 rounded-md bg-secondary px-2 py-1 text-xs text-muted-foreground">
+                <Loader2 className="size-3 animate-spin" /> Reading file…
+              </div>
+            )}
+            {fileError && (
+              <div className="mb-2 flex items-start gap-2 rounded-md bg-danger/10 px-2 py-1.5 text-xs text-danger">
+                <span className="flex-1">{fileError}</span>
+                <button onClick={() => setFileError(null)} className="shrink-0 hover:opacity-70">
                   <X className="size-3" />
                 </button>
               </div>
@@ -156,12 +186,13 @@ export function HomeChat({ projectName, onModuleCreated }: Props) {
             <div className="flex items-end gap-2 rounded-lg border border-input bg-transparent p-2">
               <button
                 onClick={() => fileInputRef.current?.click()}
-                className="rounded-md p-2 text-muted-foreground hover:bg-secondary hover:text-foreground"
-                title="Attach a .txt or .md file"
+                disabled={extracting}
+                className="rounded-md p-2 text-muted-foreground hover:bg-secondary hover:text-foreground disabled:opacity-40"
+                title="Attach a file (PDF, .txt, .md)"
               >
                 <Paperclip className="size-4" />
               </button>
-              <input ref={fileInputRef} type="file" accept=".txt,.md,text/plain" className="hidden" onChange={handleFileChange} />
+              <input ref={fileInputRef} type="file" className="hidden" onChange={handleFileChange} />
               <textarea
                 value={draft}
                 onChange={(e) => setDraft(e.target.value)}
@@ -177,7 +208,7 @@ export function HomeChat({ projectName, onModuleCreated }: Props) {
               />
               <button
                 onClick={() => void send()}
-                disabled={busy || (!draft.trim() && !attachedFile)}
+                disabled={busy || extracting || (!draft.trim() && !attachedFile)}
                 className="rounded-md bg-primary p-2 text-primary-foreground disabled:opacity-40"
               >
                 <SendHorizontal className="size-4" />
@@ -187,7 +218,8 @@ export function HomeChat({ projectName, onModuleCreated }: Props) {
               Using your saved API key · change
             </button>
             <p className="mt-1 text-[11px] text-muted-foreground">
-              PDFs and slides: copy/paste the text into the box for now — direct PDF upload isn't supported yet.
+              PDF, .txt, and .md files can be attached directly. For Word docs or slide decks, copy the text and
+              paste it into the box instead.
             </p>
           </div>
         </>

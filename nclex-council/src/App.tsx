@@ -6,15 +6,15 @@ import { ChairmanClose } from './components/ChairmanClose'
 import type { ExamAnswer } from './components/ExamQuiz'
 import { ExamQuiz } from './components/ExamQuiz'
 import { FlashcardsPage } from './components/FlashcardsPage'
-import { HomeChat } from './components/HomeChat'
 import { ModuleStudy } from './components/ModuleStudy'
 import { ProgressDashboard } from './components/ProgressDashboard'
+import { ProjectDetail } from './components/ProjectDetail'
+import { ProjectsGallery } from './components/ProjectsGallery'
 import { Quiz } from './components/Quiz'
 import { QuizResults } from './components/QuizResults'
 import type { QuizStartConfig } from './components/QuizSetup'
 import { QuizSetup } from './components/QuizSetup'
 import { StudyGuidePage } from './components/StudyGuide'
-import { TopicList } from './components/TopicList'
 import { Separator } from './components/ui/separator'
 import { SidebarInset, SidebarProvider, SidebarTrigger } from './components/ui/sidebar'
 import type { Module, StudyMode } from './data/types'
@@ -31,6 +31,7 @@ import type { AnswerDetail } from './lib/quizPool'
 import { getAllProgress, markStudied, recordAttempt } from './lib/progress'
 
 type View =
+  | { name: 'projects' }
   | { name: 'list' }
   | { name: 'study'; moduleId: string }
   | { name: 'study-guide'; moduleId: string }
@@ -45,7 +46,8 @@ type View =
   | { name: 'custom-results'; title: string; items: AnswerDetail[] }
 
 const VIEW_TITLES: Record<View['name'], string> = {
-  list: 'Home',
+  projects: 'Projects',
+  list: 'Project',
   study: 'The Council',
   'study-guide': 'Study Guide',
   'flashcards-page': 'Flashcards',
@@ -71,7 +73,7 @@ const VIEW_TO_MODE: Partial<Record<View['name'], StudyMode>> = {
 const EMPTY_MODULES: never[] = []
 
 function App() {
-  const [view, setView] = useState<View>({ name: 'list' })
+  const [view, setView] = useState<View>({ name: 'projects' })
   const [progress, setProgress] = useState(() => getAllProgress())
   const [projects, setProjects] = useState(() => getAllProjects())
   const [activeProjectId, setActiveProjectId] = useState(() => projects[0]?.id ?? '')
@@ -138,7 +140,8 @@ function App() {
     setProjects(remaining)
     if (projectId === activeProjectId) {
       setActiveProjectId(remaining[0]?.id ?? '')
-      setView({ name: 'list' })
+      if (remaining.length > 0) setView({ name: 'list' })
+      else setView({ name: 'projects' })
     }
   }
 
@@ -164,15 +167,9 @@ function App() {
   return (
     <SidebarProvider>
       <AppSidebar
-        projects={projects}
-        activeProjectId={activeProject?.id ?? ''}
-        onSelectProject={(id) => {
-          setActiveProjectId(id)
-          setView({ name: 'list' })
-        }}
-        onCreateProject={handleCreateProject}
-        onRenameProject={handleRenameProject}
-        onDeleteProject={handleDeleteProject}
+        activeProjectName={activeProject?.name}
+        onOpenActiveProject={() => setView({ name: 'list' })}
+        onOpenAllProjects={() => setView({ name: 'projects' })}
         modules={modules}
         progress={progress}
         activeView={view.name}
@@ -182,7 +179,7 @@ function App() {
         onRenameModule={handleRenameModule}
         onDeleteModule={handleDeleteModule}
         onSelectProgress={() => setView({ name: 'progress' })}
-        onSelectHome={() => setView({ name: 'list' })}
+        onSelectHome={() => setView({ name: 'projects' })}
         onSelectNewQuiz={() => setView({ name: 'quiz-setup' })}
       />
       <SidebarInset>
@@ -190,20 +187,38 @@ function App() {
           <SidebarTrigger />
           <Separator orientation="vertical" className="mr-2 h-4" />
           <span className="text-sm font-medium text-foreground">
-            {activeModule ? `${activeModule.title} · ${VIEW_TITLES[view.name]}` : VIEW_TITLES[view.name]}
+            {activeModule
+              ? `${activeModule.title} · ${VIEW_TITLES[view.name]}`
+              : view.name === 'list' && activeProject
+                ? activeProject.name
+                : VIEW_TITLES[view.name]}
           </span>
         </header>
 
         <main className="flex-1 overflow-y-auto px-4 py-8">
+          {view.name === 'projects' && (
+            <ProjectsGallery
+              projects={projects}
+              onOpenProject={(id) => {
+                setActiveProjectId(id)
+                setView({ name: 'list' })
+              }}
+              onCreateProject={handleCreateProject}
+              onRenameProject={handleRenameProject}
+              onDeleteProject={handleDeleteProject}
+            />
+          )}
+
           {view.name === 'list' && activeProject && (
-            <>
-              <HomeChat projectName={activeProject.name} onModuleCreated={handleModuleCreated} />
-              <TopicList
-                modules={modules}
-                progress={progress}
-                onSelect={(moduleId) => handleSelectMode(moduleId, 'council')}
-              />
-            </>
+            <ProjectDetail
+              project={activeProject}
+              onBackToProjects={() => setView({ name: 'projects' })}
+              onOpenTopic={(moduleId) => handleSelectMode(moduleId, 'council')}
+              onOpenStudyGuide={(moduleId) => handleSelectMode(moduleId, 'study-guide')}
+              onModuleCreated={handleModuleCreated}
+              onRenameProject={handleRenameProject}
+              onDeleteProject={handleDeleteProject}
+            />
           )}
 
           {view.name === 'study' && activeModule && (

@@ -5,33 +5,41 @@ collapsible sidebar alongside a main content pane.
 
 ## Projects
 
-The sidebar's top item is a **project switcher** — each project is a subject
-(e.g. "ICU Critical Care", the seeded project, or one you create — "Patho",
-"NUR198", whatever your course is) holding its own set of topics. "+ New
-project" creates an empty project (name + description, persisted in the
-browser); it starts with no topics — the app never invents subject matter,
-only what you upload becomes a topic. Hover a project or topic row for
-rename (pencil) and delete (trash) — these work on both built-in and
-user-created projects/topics via a `localStorage` override layer, so
-nothing about the seeded content is hard-coded as untouchable.
+Modeled directly on Claude.ai's own Projects: clicking the app name (or "All
+projects" in the sidebar) opens a **Projects gallery** — a grid of project
+cards (name, description, last-activity time, a pin toggle), sortable by
+recency or name and searchable. "+ New project" creates an empty one (name +
+description, persisted in the browser); it starts with no topics — the app
+never invents subject matter, only what you upload becomes a topic. Hover a
+card for rename (pencil) and delete (trash) — these work on both the
+built-in "ICU Critical Care" project and anything you create, via a
+`localStorage` override layer, so nothing about the seeded content is
+hard-coded as untouchable.
 
-## Uploading a lecture — the home-page chat
+Opening a project lands on its **project page**: a breadcrumb, the pin/
+rename/delete controls, an upload chat box, a **Recents** list of its
+topics (most-recently-added first), and a **Context** panel on the right
+showing each topic as a small card — the same shape as Claude.ai's own
+project view, just for lecture material instead of files.
 
-The home view (click the app name/logo) opens with a Claude-style chat box:
-paste a lecture, reading, or notes (or attach a `.txt`/`.md` file) and it
-calls the Anthropic API **directly from your browser**, using your own
-Anthropic API key, to turn only what you gave it into a new topic under the
-active project. Nothing is invented — the model is instructed to use only
-facts present in what you pasted, and to write shorter lists rather than
-padding with fabricated detail.
+## Uploading a lecture — the project chat
+
+Every project page opens with a Claude-style chat box: paste a lecture,
+reading, or notes, or attach a file — **PDF, `.txt`, or `.md`** are read
+directly in the browser (PDF text is extracted client-side via `pdfjs-dist`,
+see `src/lib/extractText.ts`; Word docs and slide decks aren't parsed yet —
+copy the text out and paste it in). It calls the Anthropic API **directly
+from your browser**, using your own Anthropic API key, to turn only what you
+gave it into a new topic under that project. Nothing is invented — the model
+is instructed to use only facts present in what you gave it, and to write
+shorter lists rather than padding with fabricated detail.
 
 This requires your own Anthropic API key (get one at console.anthropic.com):
 pasted once, it's stored in `localStorage` and sent straight to Anthropic's
 API with the `anthropic-dangerous-direct-browser-access` header — no other
 server sees it. Usage is billed to your own Anthropic account, separate from
-any Claude subscription. PDFs/slides aren't parsed yet — copy the text out
-and paste it in. See `src/lib/anthropic.ts` for the generation prompt and
-`src/lib/settings.ts` for key storage.
+any Claude subscription. See `src/lib/anthropic.ts` for the generation
+prompt and `src/lib/settings.ts` for key storage.
 
 ## Per-topic modes
 
