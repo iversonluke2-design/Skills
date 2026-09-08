@@ -1,55 +1,31 @@
 import type { ContentBlock, GlossaryTerm } from '../data/types'
 import { RichText } from './RichText'
 
+const LABELS: Record<Exclude<ContentBlock['type'], 'p'>, { text: string; color: string }> = {
+  trap: { text: 'Trap', color: 'text-danger' },
+  bedside: { text: 'Bedside', color: 'text-accent-2' },
+  howtested: { text: "How it's tested", color: 'text-primary' },
+  anchor: { text: 'Mnemonic', color: 'text-warn' },
+}
+
 export function ContentBlockView({ block, glossary }: { block: ContentBlock; glossary: GlossaryTerm[] }) {
   if (block.type === 'p') {
     return (
-      <p className="text-sm text-muted-foreground leading-relaxed">
+      <p className="text-[15px] leading-7 text-foreground">
         <RichText text={block.text} glossary={glossary} />
       </p>
     )
   }
 
-  if (block.type === 'trap') {
-    return (
-      <div className="rounded-r-lg border-l-4 border-danger bg-danger/10 py-2 pl-3 pr-3 text-sm">
-        <p className="mb-1 text-[10px] font-bold uppercase tracking-wide text-danger">NCLEX trap</p>
-        <p className="leading-relaxed text-foreground">
-          <RichText text={block.text} glossary={glossary} />
-        </p>
-      </div>
-    )
-  }
+  const { text: label, color } = LABELS[block.type]
+  const italic = block.type === 'anchor'
 
-  if (block.type === 'bedside') {
-    return (
-      <div className="rounded-r-lg border-l-4 border-accent-2 bg-accent-2/10 py-2 pl-3 pr-3 text-sm">
-        <p className="mb-1 text-[10px] font-bold uppercase tracking-wide text-accent-2">Bedside</p>
-        <p className="leading-relaxed text-foreground">
-          <RichText text={block.text} glossary={glossary} />
-        </p>
-      </div>
-    )
-  }
-
-  if (block.type === 'howtested') {
-    return (
-      <div className="rounded-r-lg border-l-4 border-dashed border-accent-2/70 bg-accent-2/5 py-2 pl-3 pr-3 text-sm">
-        <p className="mb-1 text-[10px] font-bold uppercase tracking-wide text-accent-2">How it's tested</p>
-        <p className="leading-relaxed text-foreground">
-          <RichText text={block.text} glossary={glossary} />
-        </p>
-      </div>
-    )
-  }
-
-  // anchor / mnemonic
   return (
-    <div className="rounded-r-lg border-l-4 border-warn bg-warn/10 py-2 pl-3 pr-3 text-sm italic">
-      <p className="mb-1 text-[10px] font-bold not-italic uppercase tracking-wide text-warn">Mnemonic</p>
-      <p className="leading-relaxed text-foreground">
-        <RichText text={block.text} glossary={glossary} />
-      </p>
-    </div>
+    <p className={`text-[15px] leading-7 text-foreground ${italic ? 'italic' : ''}`}>
+      <span className={`mr-2 rounded px-1.5 py-0.5 align-middle text-[10px] font-bold not-italic uppercase tracking-wide ${color} bg-current/10`}>
+        {label}
+      </span>
+      <RichText text={block.text} glossary={glossary} />
+    </p>
   )
 }

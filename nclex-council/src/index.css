@@ -2,46 +2,46 @@
 
 @theme {
   /* Brand palette */
-  --color-bg: #0b0f14;
-  --color-panel: #12181f;
-  --color-panel-2: #1a222c;
-  --color-border: #263241;
-  --color-text: #dbe4ee;
-  --color-text-dim: #8ea0b3;
-  --color-accent-2: #34d399;
-  --color-warn: #fbbf24;
-  --color-danger: #f87171;
-  --color-outsider: #c084fc;
+  --color-bg: #f7f8fa;
+  --color-panel: #ffffff;
+  --color-panel-2: #f0f2f5;
+  --color-border: #e2e5ea;
+  --color-text: #1f2429;
+  --color-text-dim: #667085;
+  --color-accent-2: #0f9d68;
+  --color-warn: #b45309;
+  --color-danger: #dc2626;
+  --color-outsider: #7c3aed;
 
   /* shadcn/ui semantic tokens, mapped onto the palette above */
-  --color-background: #0b0f14;
-  --color-foreground: #dbe4ee;
-  --color-card: #12181f;
-  --color-card-foreground: #dbe4ee;
-  --color-popover: #151c24;
-  --color-popover-foreground: #dbe4ee;
-  --color-primary: #22d3ee;
-  --color-primary-foreground: #04121a;
-  --color-secondary: #1a222c;
-  --color-secondary-foreground: #dbe4ee;
-  --color-muted: #1a222c;
-  --color-muted-foreground: #8ea0b3;
-  --color-accent: #17313a;
-  --color-accent-foreground: #dbe4ee;
-  --color-destructive: #f87171;
-  --color-destructive-foreground: #290b0b;
-  --color-border: #263241;
-  --color-input: #263241;
-  --color-ring: #22d3ee;
+  --color-background: #f7f8fa;
+  --color-foreground: #1f2429;
+  --color-card: #ffffff;
+  --color-card-foreground: #1f2429;
+  --color-popover: #ffffff;
+  --color-popover-foreground: #1f2429;
+  --color-primary: #0e7490;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f0f2f5;
+  --color-secondary-foreground: #1f2429;
+  --color-muted: #f0f2f5;
+  --color-muted-foreground: #667085;
+  --color-accent: #e0f2fe;
+  --color-accent-foreground: #0c4a6e;
+  --color-destructive: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-border: #e2e5ea;
+  --color-input: #d8dce2;
+  --color-ring: #0e7490;
 
-  --color-sidebar: #0e141b;
-  --color-sidebar-foreground: #dbe4ee;
-  --color-sidebar-primary: #22d3ee;
-  --color-sidebar-primary-foreground: #04121a;
-  --color-sidebar-accent: #17202a;
-  --color-sidebar-accent-foreground: #dbe4ee;
-  --color-sidebar-border: #263241;
-  --color-sidebar-ring: #22d3ee;
+  --color-sidebar: #f0f2f5;
+  --color-sidebar-foreground: #1f2429;
+  --color-sidebar-primary: #0e7490;
+  --color-sidebar-primary-foreground: #ffffff;
+  --color-sidebar-accent: #e2e5ea;
+  --color-sidebar-accent-foreground: #1f2429;
+  --color-sidebar-border: #e2e5ea;
+  --color-sidebar-ring: #0e7490;
 
   --radius: 0.75rem;
   --radius-sm: calc(var(--radius) - 4px);
@@ -51,7 +51,7 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 body {
@@ -68,5 +68,5 @@ body {
 
 ::selection {
   background: var(--color-primary);
-  color: #04121a;
+  color: #ffffff;
 }
